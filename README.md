@@ -4,7 +4,7 @@
 
 Asystent AI dzwoni codziennie do starszego rodzica mieszkającego samotnie, ciepło rozmawia po polsku i zbiera odpowiedzi na pytania ustalone przez rodzinę. Dorosłe dziecko dostaje status dnia, listę potrzeb rodzica i cytaty z rozmowy. Alert przychodzi, gdy zmienia się wzorzec tej konkretnej osoby, a nie przy każdym gorszym dniu.
 
-**Demo:** https://telefon-do-seniora.vercel.app (bez logowania; „Zobacz przykładowy pulpit”).
+**Demo:** https://telefon-do-seniora.vercel.app — konto dla jury: `jury@telefondoseniora.pl` / `Jury-ZxyCE5LcHE` (Supabase Auth, tylko dane demo).
 
 ## Jak to działa
 

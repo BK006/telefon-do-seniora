@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import { supabase, useAuth } from "./auth";
 import { cn } from "@/lib/utils";
 import { Icon, type IconName } from "./icons";
 import { Mascot } from "./Mascot";
@@ -30,6 +31,29 @@ function Avatar({ size = 44 }: { size?: number }) {
   );
 }
 
+function SignOutButton({ compact }: { compact?: boolean }) {
+  const { signOut } = useAuth();
+  const nav = useNavigate();
+  if (!supabase) return null;
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        await signOut();
+        nav("/");
+      }}
+      aria-label="Wyloguj się"
+      className={cn(
+        "flex items-center gap-2 rounded-2xl font-extrabold text-[var(--plum-600)] transition-colors duration-150 hover:bg-[var(--bg-app)] hover:text-[var(--plum-900)]",
+        compact ? "size-10 justify-center" : "h-12 px-4 text-[16px]",
+      )}
+    >
+      <Icon name="door" size={22} />
+      {!compact && "Wyloguj się"}
+    </button>
+  );
+}
+
 export function CareShell() {
   const { cfg } = useCare();
   const navCls = ({ isActive }: { isActive: boolean }) =>
@@ -54,7 +78,10 @@ export function CareShell() {
             </NavLink>
           ))}
         </nav>
-        <div className="mt-auto flex items-center gap-3 rounded-2xl border-2 border-[var(--line)] p-3">
+        <div className="mt-auto">
+          <SignOutButton />
+        </div>
+        <div className="mt-2 flex items-center gap-3 rounded-2xl border-2 border-[var(--line)] p-3">
           <Avatar size={40} />
           <span className="min-w-0">
             <span className="block truncate text-[15px] font-black">{cfg.relacja}</span>
@@ -69,7 +96,10 @@ export function CareShell() {
           <Mascot size={34} decorative />
           <span className="text-[17px] font-black text-[var(--violet-text)]">Telefon do seniora</span>
         </NavLink>
-        <Avatar size={38} />
+        <div className="flex items-center gap-1">
+          <SignOutButton compact />
+          <Avatar size={38} />
+        </div>
       </header>
 
       <main className="mx-auto w-full max-w-[1000px] px-4 pt-5 pb-28 md:px-10 md:pt-9 md:pb-12">

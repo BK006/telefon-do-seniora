@@ -23,7 +23,7 @@ export function Landing() {
           <Mascot size={44} decorative />
           <span className="text-[22px] font-black text-[var(--violet-text)]">Telefon do seniora</span>
         </a>
-        <Btn variant="white" onClick={() => nav("/app")} className="min-h-12 px-5">
+        <Btn variant="white" onClick={() => nav("/logowanie")} className="min-h-12 px-5">
           Zaloguj się
         </Btn>
       </header>

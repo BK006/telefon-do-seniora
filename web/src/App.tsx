@@ -10,6 +10,8 @@ import { Senior } from "@/pages/Senior";
 import { Simulator } from "@/pages/Simulator";
 import { Today } from "@/pages/Today";
 import { CareShell } from "@/care/AppShell";
+import { AuthProvider, RequireAuth } from "@/care/auth";
+import { SignIn } from "@/care/SignIn";
 import { CallDetail, CallsList } from "@/care/Calls";
 import { Landing } from "@/care/Landing";
 import { Questions, Settings, SettingsEdit } from "@/care/Settings";
@@ -36,14 +38,16 @@ function OpsHome() {
 
 export default function App() {
   return (
+    <AuthProvider>
     <CareProvider>
       <StoreProvider>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Landing />} />
-            <Route path="/kreator" element={<Wizard />} />
-            <Route path="/gotowe" element={<Success />} />
-            <Route path="/app" element={<CareShell />}>
+            <Route path="/logowanie" element={<SignIn />} />
+            <Route path="/kreator" element={<RequireAuth><Wizard /></RequireAuth>} />
+            <Route path="/gotowe" element={<RequireAuth><Success /></RequireAuth>} />
+            <Route path="/app" element={<RequireAuth><CareShell /></RequireAuth>}>
               <Route index element={<CareToday />} />
               <Route path="rozmowy" element={<CallsList />} />
               <Route path="rozmowy/:id" element={<CallDetail />} />
@@ -66,5 +70,6 @@ export default function App() {
         <Toaster position="top-center" />
       </StoreProvider>
     </CareProvider>
+    </AuthProvider>
   );
 }

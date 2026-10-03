@@ -136,8 +136,8 @@ https://github.com/BK006/telefon-do-seniora
 
 ## 16. Instructions on how to open project
 
-1. Otwórz https://telefon-do-seniora.vercel.app (dowolna nowoczesna przeglądarka, komputer lub telefon). Demo dla rodziny nie wymaga logowania.
-2. Na landingu kliknij **„Zobacz przykładowy pulpit”**. Okno szybkiego startu zapyta, do kogo dzwonić i jak się zwracać. Możesz je zamknąć, żeby przeglądać przykładowe dane.
+1. Otwórz https://telefon-do-seniora.vercel.app (dowolna nowoczesna przeglądarka, komputer lub telefon).
+2. Kliknij **„Zaloguj się”** (albo „Zobacz przykładowy pulpit”) i zaloguj się kontem dla jury: **jury@telefondoseniora.pl** / **Jury-ZxyCE5LcHE** (konto demo, wyłącznie dane syntetyczne). Okno szybkiego startu zapyta, do kogo dzwonić i jak się zwracać. Możesz je zamknąć, żeby przeglądać przykładowe dane.
 3. **Dziś:**
    - status dnia, „Potrzebuje”, seria rozmów;
    - trendy z 30 dni na tle normy rodzica;

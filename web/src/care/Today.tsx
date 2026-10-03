@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Avatar } from "./AppShell";
-import { placeCall } from "./api";
+import { analyzeCall, listCalls, placeCall, type Analysis, type LiveCall } from "./api";
 import { Icon, TONE, type IconName, type Tone } from "./icons";
 import { Mascot, type Mood } from "./Mascot";
 import { DF, DN, useCare, type DashState } from "./state";
@@ -27,9 +27,94 @@ const DEMO_STATES: [DashState, string][] = [
   ["zadzwon", "Warto zadzwonić"],
   ["pilne", "Pilne"],
   ["nieodebrala", "Nie odebrała"],
-  ["pusty", "Pusty"],
+  ["pusty", "Prawdziwe dane"],
   ["ladowanie", "Ładowanie"],
 ];
+
+const LIVE_STATUS = {
+  ok: { title: "Wszystko w porządku", bg: "#DCF8EC", bd: "#3DDC97", fg: "#146B47", solid: "#1FB57A", icon: "check" as IconName, mood: "radosc" as Mood },
+  zadzwon: { title: "Warto zadzwonić", bg: "#FFF5D6", bd: "#FFC53D", fg: "#7A5600", solid: "#E0A100", icon: "phone" as IconName, mood: "zamyslenie" as Mood },
+  pilne: { title: "Pilne", bg: "#FFE6EC", bd: "#F0466B", fg: "#B0183D", solid: "#D61F4B", icon: "alert" as IconName, mood: "troska" as Mood },
+};
+
+/** Latest real call placed from the app, with its AI analysis — the dashboard's live state. */
+function useLatestRealCall() {
+  const [state, setState] = useState<{ call: LiveCall | null; analysis: Analysis | null; loading: boolean }>({ call: null, analysis: null, loading: true });
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const calls = await listCalls();
+      const call = calls[0] ?? null;
+      let analysis: Analysis | null = null;
+      if (call && call.status === "done" && call.answered) {
+        const a = await analyzeCall(call.id);
+        if (!("error" in a)) analysis = a;
+      }
+      if (alive) setState({ call, analysis, loading: false });
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return state;
+}
+
+function LatestRealCall({ call, analysis }: { call: LiveCall; analysis: Analysis | null }) {
+  const when = call.startedAt
+    ? new Intl.DateTimeFormat("pl-PL", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }).format(new Date(call.startedAt * 1000))
+    : "";
+  if (!analysis) {
+    const text = call.status !== "done" ? "Rozmowa trwa albo jest jeszcze przetwarzana. Odśwież za chwilę." : call.answered ? "Analiza rozmowy jest w przygotowaniu." : "Ostatnie połączenie nie zostało odebrane.";
+    return (
+      <Card className="flex items-center gap-4">
+        <Mascot size={64} mood="czeka" decorative />
+        <div className="flex-1">
+          <p className="text-[15px] font-extrabold text-[var(--plum-600)] first-letter:uppercase">{when}</p>
+          <p className="text-[18px] font-black">{text}</p>
+        </div>
+        <Link to={`/app/rozmowy/${call.id}`} className="font-extrabold text-[var(--violet-text)]">Szczegóły →</Link>
+      </Card>
+    );
+  }
+  const st = LIVE_STATUS[analysis.day.status];
+  const ci = analysis.checkIn;
+  return (
+    <div className="space-y-4">
+      <section className="flex items-center gap-5 rounded-[24px] border-2 p-5 sm:p-6" style={{ background: st.bg, borderColor: st.bd }} aria-labelledby="live-status-h">
+        <span className="grid size-[60px] shrink-0 place-items-center self-start rounded-full text-white" style={{ background: st.solid }}>
+          <Icon name={st.icon} size={30} stroke={3} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-[15px] font-extrabold" style={{ color: st.fg }}>Status po ostatniej rozmowie</p>
+          <h2 id="live-status-h" className="text-[28px] leading-tight font-black" style={{ color: st.fg }}>{st.title}</h2>
+          {analysis.day.reasons.length > 0 && <p className="font-extrabold" style={{ color: st.fg }}>Powód: {analysis.day.reasons.join(", ")}</p>}
+          <p className="mt-1 text-[17px]">{ci.summary_pl}</p>
+          <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[15px] font-bold text-[var(--plum-600)]">
+            <span className="first-letter:uppercase">{when}</span>
+            <Link to={`/app/rozmowy/${call.id}`} className="font-extrabold text-[var(--violet-text)] underline-offset-4 hover:underline">Zobacz rozmowę →</Link>
+          </p>
+        </div>
+        <div className="hidden sm:block"><Mascot size={84} mood={st.mood} decorative /></div>
+      </section>
+      {ci.needs.length > 0 && (
+        <Card>
+          <SectionTitle>Potrzebuje</SectionTitle>
+          <ul className="mt-2 space-y-2">
+            {ci.needs.map((n, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <Icon name="bag" className="mt-0.5 shrink-0 text-[#B0245A]" />
+                <span>
+                  <span className="block text-[17px] font-extrabold">{n.item}</span>
+                  <span className="block text-[15px] italic text-[var(--plum-600)]">«{n.evidence}»</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+    </div>
+  );
+}
 
 function MiniChart({ label, icon, tone, data }: { label: string; icon: IconName; tone: Tone; data: (number | null)[] }) {
   const t = TONE[tone];
@@ -83,6 +168,7 @@ export function Today() {
   const nav = useNavigate();
   const [skipped, setSkipped] = useState(false);
   const [calling, setCalling] = useState<"idle" | "dialing" | "done">("idle");
+  const live = useLatestRealCall();
   const who = cfg.relacja || "Mama";
   const today = new Intl.DateTimeFormat("pl-PL", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
 
@@ -144,6 +230,22 @@ export function Today() {
     return (
       <div className="space-y-6">
         {header}
+        {live.loading ? (
+          <div className="skeleton h-40" aria-busy="true" />
+        ) : live.call ? (
+          <>
+            <LatestRealCall call={live.call} analysis={live.analysis} />
+            <Card className="flex flex-wrap items-center gap-4">
+              <div className="min-w-0 flex-1">
+                <p className="text-[15px] font-extrabold text-[var(--plum-600)]">Następna rozmowa</p>
+                <p className="text-[22px] font-black">{calling === "dialing" ? `Asystent dzwoni do: ${cfg.forma}…` : `Jutro, ${cfg.sloty[0]}`}</p>
+              </div>
+              <Btn variant="mint" icon="phone" onClick={callNow} disabled={calling === "dialing"}>
+                {calling === "dialing" ? "Łączę…" : "Zadzwoń teraz"}
+              </Btn>
+            </Card>
+          </>
+        ) : (
         <Card className="flex flex-col items-center px-6 py-12 text-center">
           <Mascot size={160} mood="czeka" />
           <h2 className="mt-5 text-[28px] font-black">Czekam na pierwszą rozmowę</h2>
@@ -159,6 +261,7 @@ export function Today() {
             </Btn>
           </div>
         </Card>
+        )}
         {demoSwitch}
       </div>
     );

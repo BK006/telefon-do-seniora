@@ -1,5 +1,6 @@
 // analyze-call: turns a real phone conversation into a structured, quoted check-in (OpenAI)
-// and caches it in live_analyses. Same guard as list-calls: signed-in users only, +48 numbers only.
+// and caches it in live_analyses. Same guard as list-calls: signed-in users only, and only calls
+// placed through the app (present in call_log) to +48 numbers.
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { dayStatus, extractCheckIn } from "../_shared/analysis/extract.ts";
 
@@ -34,6 +35,10 @@ Deno.serve(async (req) => {
   if (!conversation_id || !/^conv_[a-z0-9]+$/i.test(conversation_id)) return json({ error: "conversation_id required" }, 400);
 
   const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+  // Only calls placed through the app can be analysed.
+  const { data: logged } = await db.from("call_log").select("id").eq("conversation_id", conversation_id).maybeSingle();
+  if (!logged) return json({ error: "not allowed" }, 403);
+
   if (!force) {
     const { data } = await db.from("live_analyses").select("result, model").eq("conversation_id", conversation_id).maybeSingle();
     if (data) return json({ ...data.result, model: data.model, cached: true });

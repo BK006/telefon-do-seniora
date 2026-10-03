@@ -126,12 +126,13 @@ function save(k: string, v: unknown) {
 
 export function CareProvider({ children }: { children: ReactNode }) {
   const [cfg, setCfgState] = useState<CareConfig>(() => load("tds.care.cfg", SAMPLE));
+  // Sample needs, shown only in the demo dashboard states.
   const [needs, setNeeds] = useState<Need[]>([
     { t: "Chleb i mleko", src: "z rozmowy 3 paź", done: false },
     { t: "Podwiezienie do lekarza w czwartek, 8 października", src: "z rozmowy 1 paź", done: false },
     { t: "Baterie do pilota", src: "z rozmowy 28 wrz", done: true },
   ]);
-  const [dash, setDash] = useState<DashState>("ok");
+  const [dash, setDash] = useState<DashState>("pusty"); // clean start: no calls yet
   const [pause, setPauseState] = useState({ on: false, until: "2026-10-15", why: "Mama jest w sanatorium" });
 
   useEffect(() => save("tds.care.cfg", cfg), [cfg]);

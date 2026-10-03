@@ -1,6 +1,8 @@
-// list-calls: real phone conversations of the agent, for the "Rozmowy" tab.
-// The ElevenLabs key stays server-side. Only signed-in users can read calls, and only
-// calls to Polish (+48) numbers placed by this agent are returned.
+// list-calls: real phone conversations for the "Rozmowy" tab.
+// Source of truth is call_log: only calls placed through the app (place-call) are shown, newest
+// first. Only signed-in users can read them. The ElevenLabs key stays server-side.
+import { createClient } from "npm:@supabase/supabase-js@2";
+
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
@@ -16,7 +18,6 @@ function isSignedIn(req: Request) {
     return false;
   }
 }
-const norm = (n: string) => n.replace(/[^\d+]/g, "").replace(/^00/, "+").replace(/^(\d{9})$/, "+48$1");
 // Expressive-mode audio tags like "[gentle] " are for the voice, not for people reading.
 const clean = (t: string) => t.replace(/\[[a-z ]+\]\s*/gi, "").trim();
 
@@ -25,35 +26,35 @@ Deno.serve(async (req) => {
   const json = (b: unknown, status = 200) => Response.json(b, { status, headers: CORS });
   if (!isSignedIn(req)) return json({ error: "login required" }, 401);
   const key = Deno.env.get("ELEVENLABS_API_KEY");
-  const agent = Deno.env.get("ELEVENLABS_AGENT_ID");
-  if (!key || !agent) return json({ error: "missing secrets" }, 500);
+  if (!key) return json({ error: "missing secrets" }, 500);
 
-  const h = { "xi-api-key": key };
-  const list = await fetch(`https://api.elevenlabs.io/v1/convai/conversations?agent_id=${agent}&page_size=15`, { headers: h });
-  if (!list.ok) return json({ error: "elevenlabs list error", status: list.status }, 502);
-  const { conversations = [] } = await list.json();
+  const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
+  const { data: logged } = await db
+    .from("call_log")
+    .select("conversation_id")
+    .not("conversation_id", "is", null)
+    .order("created_at", { ascending: false })
+    .limit(10);
 
   const details = await Promise.all(
-    conversations.slice(0, 10).map(async (c: { conversation_id: string }) => {
-      const r = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${c.conversation_id}`, { headers: h });
+    (logged ?? []).map(async (c: { conversation_id: string }) => {
+      const r = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${c.conversation_id}`, { headers: { "xi-api-key": key } });
       return r.ok ? r.json() : null;
     }),
   );
 
-  const calls = details
-    .filter((d) => d && norm(d.metadata?.phone_call?.external_number ?? "").startsWith("+48"))
-    .map((d) => ({
-      id: d.conversation_id,
-      status: d.status, // "done" | "in-progress" | "failed" ...
-      startedAt: d.metadata?.start_time_unix_secs ?? null,
-      durationSecs: d.metadata?.call_duration_secs ?? 0,
-      answered: (d.transcript ?? []).some((t: { role: string; message?: string }) => t.role === "user" && t.message && t.message !== "..."),
-      title: d.analysis?.call_summary_title ?? null,
-      summary: d.analysis?.transcript_summary ?? null,
-      transcript: (d.transcript ?? [])
-        .filter((t: { message?: string }) => t.message && t.message.trim() !== "...")
-        .map((t: { role: string; message: string }) => ({ role: t.role === "agent" ? "ai" : "senior", text: clean(t.message) })),
-    }));
+  const calls = details.filter(Boolean).map((d) => ({
+    id: d.conversation_id,
+    status: d.status, // "initiated" | "in-progress" | "processing" | "done" | "failed"
+    startedAt: d.metadata?.start_time_unix_secs ?? null,
+    durationSecs: d.metadata?.call_duration_secs ?? 0,
+    answered: (d.transcript ?? []).some((t: { role: string; message?: string }) => t.role === "user" && t.message && t.message !== "..."),
+    title: d.analysis?.call_summary_title ?? null,
+    summary: d.analysis?.transcript_summary ?? null,
+    transcript: (d.transcript ?? [])
+      .filter((t: { message?: string }) => t.message && t.message.trim() !== "...")
+      .map((t: { role: string; message: string }) => ({ role: t.role === "agent" ? "ai" : "senior", text: clean(t.message) })),
+  }));
 
   return json({ calls });
 });

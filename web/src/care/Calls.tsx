@@ -35,7 +35,7 @@ function LiveSection() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <SectionTitle>
-            <span id="live-h">Prawdziwe połączenia</span>
+            <span id="live-h">Historia połączeń</span>
           </SectionTitle>
           <p className="text-[15px] font-bold text-[var(--plum-600)]">Rozmowy, które asystent naprawdę przeprowadził przez telefon.</p>
         </div>
@@ -46,9 +46,14 @@ function LiveSection() {
       {calls === null ? (
         <div className="skeleton h-24" aria-busy="true" />
       ) : calls.length === 0 ? (
-        <p className="rounded-[24px] border-2 border-dashed border-[var(--line-strong)] p-5 font-bold text-[var(--plum-600)]">
-          Jeszcze nie było prawdziwych połączeń. Użyj „Zadzwoń teraz” na pulpicie.
-        </p>
+        <div className="card flex flex-col items-center px-6 py-10 text-center">
+          <Mascot size={120} mood="czeka" decorative />
+          <h3 className="mt-4 text-[22px] font-black">Jeszcze nie było rozmów</h3>
+          <p className="mt-1 max-w-sm text-[var(--plum-600)]">Pierwsza rozmowa pojawi się tutaj zaraz po zakończeniu połączenia, razem z analizą i zapisem.</p>
+          <Link to="/app" className="btn3d btn3d-mint mt-5">
+            <Icon name="phone" size={22} /> Zadzwoń teraz na próbę
+          </Link>
+        </div>
       ) : (
         <ul className="space-y-3">
           {calls.map((c) => (
@@ -239,32 +244,6 @@ export function CallsList() {
     <div className="space-y-5">
       <h1 className="text-[30px] font-black">Rozmowy</h1>
       <LiveSection />
-      <SectionTitle className="pt-4">Przykładowa historia (demo)</SectionTitle>
-      <ul className="space-y-3">
-        {SESSIONS.map((s) => (
-          <li key={s.id}>
-            <Link to={`/app/rozmowy/${s.id}`} className="card card-press flex items-center gap-4 p-4 sm:p-5">
-              <span className="grid size-[60px] shrink-0 place-items-center rounded-2xl bg-[var(--bg-app)] text-center leading-none">
-                <span>
-                  <span className="block text-[24px] font-black">{s.d}</span>
-                  <span className="block text-[13px] font-extrabold text-[var(--plum-600)]">{s.m}</span>
-                </span>
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <span className="text-[18px] font-black">
-                    {s.date.split(",")[0]}, {s.time}
-                  </span>
-                  <span className="text-[15px] font-bold text-[var(--plum-600)]">{s.dur}</span>
-                  <StatusChip st={s.st} />
-                </span>
-                <span className="mt-1 block text-[16px] text-[var(--plum-700)]">{s.sum}</span>
-              </span>
-              <Icon name="chevronR" className="shrink-0 text-[var(--plum-400)]" />
-            </Link>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }

@@ -121,25 +121,5 @@ https://github.com/BK006/telefon-do-seniora
 
 1. Open https://telefon-do-seniora.vercel.app (any modern browser, desktop or mobile).
 2. Click **"Zaloguj się"** (or "Zobacz przykładowy pulpit") and sign in with the jury account: **jury@telefondoseniora.pl** (password provided in the HackYeah submission form) (demo admin account, synthetic data only). A quick-start window asks who to call and how to address them. You can close it to browse the sample data.
-3. **Dziś (Today):**
-   - day status, "Potrzebuje" (needs) and the call streak;
-   - 30-day trends against the parent's own norm;
-   - "Demo: pokaż inny stan pulpitu" at the bottom switches between all states (all good, worth calling, urgent, no answer, empty, loading).
-4. **Rozmowy (Calls):**
-   - the "Prawdziwe połączenia" section holds a real test call;
-   - open it to see the AI analysis (status, needs, scored answers with quotes) and the full transcript.
-5. **Pytania / Ustawienia:** edit the questions, the schedule and the profile. These settings feed the agent's prompt for the next call.
-6. **"Zacznij za darmo"** on the landing page opens the full 7-step setup wizard.
-7. **Live calls:** signed-in users can call any Polish (+48) number; calls are rate-limited (20 per hour for the whole demo). The video shows a live call.
-
-**AI and external resources disclosure:**
-- Models and APIs: ElevenLabs Conversational AI (voice agent, Polish TTS/STT), OpenAI gpt-4.1-mini (structured transcript analysis).
-- Telephony: Telnyx SIP trunk.
-- Infrastructure: Supabase (Postgres, Auth, Edge Functions), Vercel (hosting).
-- Libraries: React, Vite, Tailwind CSS, shadcn/ui (Radix), Recharts, Sonner.
-- Font: M PLUS Rounded 1c (Google Fonts).
-- Code and design were produced with substantial help from AI coding and design assistants (Claude Code, Claude Design); details are in docs/AI_DISCLOSURE.md.
-
-## 17. Presentation
-
-[PDF, max 10 slides — generated from docs/DECK_PROMPT.md]
+3. **Dziś (Today):** starts clean ("waiting for the first call"). Press **"Zadzwoń teraz na próbę"** with your own Polish number (set it in the quick-start window) to receive a real call; afterwards the dashboard shows the day status, needs and summary from that call. "Demo: pokaż inny stan pulpitu" at the bottom shows sample states (all good, worth calling, urgent, no answer, loading) with 30-day trends.
+4. **Rozmowy (Calls):** every call placed from the app, with the AI analysis (status, needs, scored answers with quotes) and the full transcript.

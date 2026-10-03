@@ -12,7 +12,7 @@ Yes (when ready to show the jury)
 
 "Mum lives alone, 300 km away. I call when I can, and she always says she's fine."
 
-This is the reality for hundreds of thousands of Polish families. Roughly one in four people in Poland is already 60 or older (Demagog, based on Statistics Poland data). Over 90% of widowed seniors are women living alone (GUS / Ministry of Family, "Situation of older people in Poland in 2024").
+This is the reality for hundreds of thousands of Polish families. Roughly one in four people in Poland is already 60 or older (Demagog, based on Statistics Poland data). Over 90% of widowed seniors are women, many of them living alone (GUS / Ministry of Family, "Situation of older people in Poland in 2024").
 
 Their adult children work, have their own families and often live in another city. They cannot call every day at the same time. Seniors don't want to "be a bother", so they rarely mention a bad week.
 
@@ -32,9 +32,9 @@ Sources:
 "Telefon do seniora" is a daily phone call to your parent from a warm AI assistant, plus a simple app for you.
 
 **How it works for the adult child (our customer):**
-1. **Set up in minutes.** Who your parent is and how the assistant should address them ("Pani Halino", "Mamo"), their phone number, health context (conditions, medication times), what they enjoy talking about and what to avoid, which questions to ask, which days and times to call, and where to send updates. A 3-question quick start gets you to a first test call in under a minute.
+1. **Set up in minutes.** Who your parent is and how the assistant should address them ("Pani Halino", "Mamo"), their phone number, health context (conditions, medication times), what they enjoy talking about and what to avoid, which questions to ask, and which days and times to call. A 3-question quick start gets you to a first test call in under a minute.
 2. **The assistant calls.** It rings a regular phone, with no app or smartphone needed on the parent's side. It speaks Polish slowly and kindly and asks about sleep, appetite, mood, pain, medication, going out, contact with people and whether they need anything.
-3. **You get a short summary.** It shows a day status (all good / worth calling / urgent), what your parent needs (e.g. bread and milk, a lift to the doctor on Thursday), answers backed by your parent's own words, and the full transcript. You're alerted when the pattern changes, not on every bad day.
+3. **You get a short summary in the app dashboard.** It shows a day status (all good / worth calling / urgent), what your parent needs (e.g. bread and milk, a lift to the doctor on Thursday), answers backed by your parent's own words, and the full transcript. You're alerted when the pattern changes, not on every bad day. (Email digests are in preparation.)
 
 **The role of AI and how the parts work together:**
 - **Voice:** ElevenLabs Conversational AI calls from a Polish +48 number. The agent's prompt is built per senior from what the family entered, so the conversation is personal ("Did Zosia call from Kraków?").
@@ -47,18 +47,18 @@ Sources:
 **Safety and trust:**
 - The assistant always says it is an AI in the first sentence (EU AI Act, Art. 50).
 - It never asks for money, PINs, passwords or ID numbers, which protects against "grandparent scams".
-- If a fall or chest pain comes up, it calmly points to 112 and never promises help is on the way. The family gets an urgent alert with a "Call Mum" button.
+- If a fall or chest pain comes up, it calmly points to 112 and never promises help is on the way. The dashboard immediately shows an urgent alert with a "Call Mum" button.
 - At the end of each call the parent hears what will be passed on and can withhold any topic ("don't tell Kasia that"). Withheld topics never reach the family.
 
 **What is real today:**
 - A working web app.
-- Real outbound phone calls to a test number (a 4-minute live test call on 3 Oct 2026 was transcribed and analysed end to end).
+- A real outbound phone call to a +48 test number (a 4-minute live call on 3 Oct 2026, transcribed and analysed end to end with quotes).
 - A detection engine with 13 automated tests. On a labelled synthetic set (30 seniors, 875 senior-days) it detected 9 of 9 deterioration scenarios, on average 0.8 days after the expected day, with 0 false alarms, including seniors whose "bad days" are their normal.
 
 **Limitations (honestly):**
 - The 30-day history in the demo is synthetic; only the test calls are real.
 - There is no clinical validation yet; the next step is a pilot with real families.
-- Pricing and willingness to pay still need testing.
+- Pricing and willingness to pay still need testing; email notifications and shared sibling accounts are in preparation.
 - Mood is taken only from what the senior says; we deliberately do not analyse tone of voice.
 - A legal review (GDPR, AI Act, senior consent flow) is needed before launch.
 

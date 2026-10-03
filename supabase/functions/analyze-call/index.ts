@@ -1,6 +1,5 @@
 // analyze-call: turns a real phone conversation into a structured, quoted check-in (OpenAI)
-// and caches it in live_analyses. Same privacy guard as list-calls: only conversations with
-// demo test numbers (ALLOWED_CALL_NUMBERS) can be analysed through the public anon key.
+// and caches it in live_analyses. Same guard as list-calls: signed-in users only, +48 numbers only.
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { dayStatus, extractCheckIn } from "../_shared/analysis/extract.ts";
 
@@ -9,12 +8,22 @@ const CORS = {
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
+function isSignedIn(req: Request) {
+  const token = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+  try {
+    const role = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).role;
+    return role === "authenticated" || role === "service_role";
+  } catch {
+    return false;
+  }
+}
 const norm = (n: string) => n.replace(/[^\d+]/g, "").replace(/^00/, "+").replace(/^(\d{9})$/, "+48$1");
 const clean = (t: string) => t.replace(/\[[a-z ]+\]\s*/gi, "").trim();
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   const json = (b: unknown, status = 200) => Response.json(b, { status, headers: CORS });
+  if (!isSignedIn(req)) return json({ error: "login required" }, 401);
 
   const el = Deno.env.get("ELEVENLABS_API_KEY");
   const oa = Deno.env.get("OPENAI_API_KEY");
@@ -33,8 +42,7 @@ Deno.serve(async (req) => {
   const r = await fetch(`https://api.elevenlabs.io/v1/convai/conversations/${conversation_id}`, { headers: { "xi-api-key": el } });
   if (!r.ok) return json({ error: "conversation not found" }, 404);
   const conv = await r.json();
-  const allowed = new Set((Deno.env.get("ALLOWED_CALL_NUMBERS") ?? "").split(",").map((s) => norm(s.trim())).filter(Boolean));
-  if (!allowed.has(norm(conv.metadata?.phone_call?.external_number ?? ""))) return json({ error: "not allowed" }, 403);
+  if (!norm(conv.metadata?.phone_call?.external_number ?? "").startsWith("+48")) return json({ error: "not allowed" }, 403);
   if (conv.status !== "done") return json({ error: "call still in progress" }, 409);
 
   const transcript = (conv.transcript ?? [])

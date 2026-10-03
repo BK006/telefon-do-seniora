@@ -1,13 +1,21 @@
 // list-calls: real phone conversations of the agent, for the "Rozmowy" tab.
-// The ElevenLabs key stays server-side. Privacy guard for the public demo: only calls to
-// numbers on the ALLOWED_CALL_NUMBERS list are returned (the demo test phones), so the
-// anon key can never read anyone else's transcripts.
+// The ElevenLabs key stays server-side. Only signed-in users can read calls, and only
+// calls to Polish (+48) numbers placed by this agent are returned.
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
 };
 
+function isSignedIn(req: Request) {
+  const token = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+  try {
+    const role = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).role;
+    return role === "authenticated" || role === "service_role";
+  } catch {
+    return false;
+  }
+}
 const norm = (n: string) => n.replace(/[^\d+]/g, "").replace(/^00/, "+").replace(/^(\d{9})$/, "+48$1");
 // Expressive-mode audio tags like "[gentle] " are for the voice, not for people reading.
 const clean = (t: string) => t.replace(/\[[a-z ]+\]\s*/gi, "").trim();
@@ -15,10 +23,10 @@ const clean = (t: string) => t.replace(/\[[a-z ]+\]\s*/gi, "").trim();
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: CORS });
   const json = (b: unknown, status = 200) => Response.json(b, { status, headers: CORS });
+  if (!isSignedIn(req)) return json({ error: "login required" }, 401);
   const key = Deno.env.get("ELEVENLABS_API_KEY");
   const agent = Deno.env.get("ELEVENLABS_AGENT_ID");
   if (!key || !agent) return json({ error: "missing secrets" }, 500);
-  const allowed = new Set((Deno.env.get("ALLOWED_CALL_NUMBERS") ?? "").split(",").map((s) => norm(s.trim())).filter(Boolean));
 
   const h = { "xi-api-key": key };
   const list = await fetch(`https://api.elevenlabs.io/v1/convai/conversations?agent_id=${agent}&page_size=15`, { headers: h });
@@ -33,7 +41,7 @@ Deno.serve(async (req) => {
   );
 
   const calls = details
-    .filter((d) => d && allowed.has(norm(d.metadata?.phone_call?.external_number ?? "")))
+    .filter((d) => d && norm(d.metadata?.phone_call?.external_number ?? "").startsWith("+48"))
     .map((d) => ({
       id: d.conversation_id,
       status: d.status, // "done" | "in-progress" | "failed" ...

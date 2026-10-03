@@ -45,4 +45,4 @@ Klucz anon jest publiczny z założenia; dane chroni RLS. Klucza `service_role` 
   Prompt = `{{system_prompt}}`, pierwsza wiadomość = `{{first_message}}`; backend przekazuje obie wartości w `dynamic_variables` przy każdym połączeniu.
 - Numer: +48 732 098 804 (Telnyx SIP), `phnum_1201m1hh0znbe8rvdksm0ehqx6hy` → secret `ELEVENLABS_PHONE_NUMBER_ID`.
   Inbound: przypięty do agenta. Outbound: `POST /v1/convai/sip-trunk/outbound-call` z `agent_id`, `agent_phone_number_id`, `to_number` i `conversation_initiation_client_data.dynamic_variables`.
-- `ALLOWED_CALL_NUMBERS` — lista numerów (po przecinku, np. `+48512665208`), na które `place-call` może dzwonić z publicznej aplikacji (klucz anon). Zabezpieczenie przed nadużyciem: bez tej listy publiczny endpoint mógłby dzwonić na dowolny numer. Wywołania z kluczem service role nie są ograniczone.
+- Dzwonienie: `place-call` wymaga zalogowanego użytkownika (JWT Supabase Auth), dzwoni tylko na numery +48 i ma limit 20 połączeń na godzinę (tabela `call_log`). Secret `ALLOWED_CALL_NUMBERS` nie jest już używany.

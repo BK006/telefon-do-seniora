@@ -4,7 +4,7 @@
 
 Asystent AI dzwoni codziennie do starszego rodzica mieszkającego samotnie, ciepło rozmawia po polsku i zbiera odpowiedzi na pytania ustalone przez rodzinę. Dorosłe dziecko dostaje status dnia, listę potrzeb rodzica i cytaty z rozmowy. Alert przychodzi, gdy zmienia się wzorzec tej konkretnej osoby, a nie przy każdym gorszym dniu.
 
-**Demo:** https://telefon-do-seniora.vercel.app — konto dla jury: `jury@telefondoseniora.pl` / `Jury-ZxyCE5LcHE` (Supabase Auth, tylko dane demo).
+**Demo:** https://telefon-do-seniora.vercel.app — konto dla jury: `jury@telefondoseniora.pl` (hasło w formularzu zgłoszeniowym HackYeah) (Supabase Auth, tylko dane demo).
 
 ## Jak to działa
 
@@ -72,7 +72,7 @@ Plus prawdziwe połączenie testowe (3.10.2026, 4 min): transkrypt przeanalizowa
 - Historia w demo jest syntetyczna; prawdziwe są tylko połączenia testowe.
 - Brak walidacji klinicznej. To nie jest wyrób medyczny i nie diagnozuje.
 - Nastrój bierzemy tylko z deklaracji seniora; świadomie nie analizujemy barwy głosu (do weryfikacji prawnej).
-- Publiczne demo dzwoni i pokazuje rozmowy wyłącznie dla numerów testowych zespołu (`ALLOWED_CALL_NUMBERS`).
+- Połączenia tylko dla zalogowanych, wyłącznie na numery +48, limit 20 na godzinę (`call_log`).
 - Przed wdrożeniem potrzebny jest przegląd RODO / AI Act i proces zgody seniora.
 
 ## Dokumenty

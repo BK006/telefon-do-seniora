@@ -110,7 +110,7 @@ Nowy pomysł (powstał w całości na HackYeah 2026)
   - prawdziwe połączenia wychodzące z numeru +48 z automatycznym rozłączaniem.
 - **Analiza AI:** zapis rozmowy → ustrukturyzowany rekord z cytatami (OpenAI structured outputs, schemat JSON w trybie strict), zapamiętywany per rozmowa.
 - **Silnik wykrywania:** normy osobiste, utrzymywanie się zmiany + CUSUM, czerwone flagi, reguła „brak kontaktu”. Ewaluacja na oznaczonym zbiorze syntetycznym, 13 testów jednostkowych.
-- **Backend:** Supabase (Postgres z row-level security, zgoda egzekwowana w bazie, Edge Functions). Klucze API wyłącznie jako sekrety po stronie serwera. Publiczne endpointy dzwonią i czytają tylko numery testowe demo.
+- **Backend:** Supabase (Postgres z row-level security, zgoda egzekwowana w bazie, Edge Functions). Klucze API wyłącznie jako sekrety po stronie serwera. Połączenia wymagają zalogowania, idą tylko na numery +48 i mają limit na godzinę.
 
 **Cel po hackathonie:** 6-tygodniowy pilotaż z ok. 20 rodzinami. Sprawdzamy, czy dzieci szybciej reagują na gorszy tydzień rodzica i czy seniorzy chętnie odbierają. Potem podsumowania e-mailem i model abonamentowy.
 
@@ -137,7 +137,7 @@ https://github.com/BK006/telefon-do-seniora
 ## 16. Instructions on how to open project
 
 1. Otwórz https://telefon-do-seniora.vercel.app (dowolna nowoczesna przeglądarka, komputer lub telefon).
-2. Kliknij **„Zaloguj się”** (albo „Zobacz przykładowy pulpit”) i zaloguj się kontem dla jury: **jury@telefondoseniora.pl** / **Jury-ZxyCE5LcHE** (konto demo, wyłącznie dane syntetyczne). Okno szybkiego startu zapyta, do kogo dzwonić i jak się zwracać. Możesz je zamknąć, żeby przeglądać przykładowe dane.
+2. Kliknij **„Zaloguj się”** (albo „Zobacz przykładowy pulpit”) i zaloguj się kontem dla jury: **jury@telefondoseniora.pl** (hasło w formularzu zgłoszeniowym HackYeah) (konto demo, wyłącznie dane syntetyczne). Okno szybkiego startu zapyta, do kogo dzwonić i jak się zwracać. Możesz je zamknąć, żeby przeglądać przykładowe dane.
 3. **Dziś:**
    - status dnia, „Potrzebuje”, seria rozmów;
    - trendy z 30 dni na tle normy rodzica;
@@ -147,7 +147,7 @@ https://github.com/BK006/telefon-do-seniora
    - po jej otwarciu widać analizę AI (status, potrzeby, oceny z cytatami) i pełny zapis.
 5. **Pytania / Ustawienia:** edytuj pytania, harmonogram i profil. Te ustawienia trafiają do promptu agenta przy następnej rozmowie.
 6. **„Zacznij za darmo”** na landingu otwiera pełny kreator w 7 krokach.
-7. **Połączenia na żywo:** ze względów bezpieczeństwa publiczne demo dzwoni tylko na numery testowe zespołu, więc „Zadzwoń teraz” z innym numerem pokaże wyjaśnienie. Połączenie na żywo pokazujemy na wideo.
+7. **Połączenia na żywo:** po zalogowaniu można dzwonić na dowolny polski numer (+48); limit 20 połączeń na godzinę dla całego demo. Połączenie na żywo pokazujemy na wideo.
 
 **Ujawnienie AI i zasobów zewnętrznych:**
 - Modele i API: ElevenLabs Conversational AI (agent głosowy, polski TTS/STT), OpenAI gpt-4.1-mini (ustrukturyzowana analiza rozmów).

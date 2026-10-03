@@ -37,7 +37,7 @@ function LiveSection() {
           <SectionTitle>
             <span id="live-h">Prawdziwe połączenia</span>
           </SectionTitle>
-          <p className="text-[15px] font-bold text-[var(--plum-600)]">Rozmowy wykonane przez asystenta na numery testowe demo.</p>
+          <p className="text-[15px] font-bold text-[var(--plum-600)]">Rozmowy, które asystent naprawdę przeprowadził przez telefon.</p>
         </div>
         <Btn variant="white" icon="retry" onClick={refresh} className="min-h-11">
           Odśwież

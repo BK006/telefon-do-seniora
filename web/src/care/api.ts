@@ -1,11 +1,17 @@
-// Calls the place-call Edge Function. Only the public project URL and anon key reach the
-// browser; the ElevenLabs key lives in Supabase secrets, and place-call only dials numbers on
-// the server-side allow-list for anonymous callers.
+// Calls the Edge Functions with the signed-in user's JWT. Only the public project URL and
+// anon key reach the browser; the ElevenLabs/OpenAI keys live in Supabase secrets. The server
+// requires a logged-in user, dials only +48 numbers and rate-limits calls.
 import type { SeniorProfile } from "@shared/agent/prompt.ts";
 import type { CareConfig } from "./state";
+import { supabase } from "./auth";
 
 const URL_ = import.meta.env.VITE_SUPABASE_URL as string | undefined;
 const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+
+async function authHeaders(): Promise<Record<string, string>> {
+  const token = (await supabase?.auth.getSession())?.data.session?.access_token;
+  return { Authorization: `Bearer ${token ?? ANON}`, apikey: ANON ?? "" };
+}
 
 export function toProfile(c: CareConfig): SeniorProfile {
   return {
@@ -33,7 +39,7 @@ export async function placeCall(c: CareConfig): Promise<{ ok: true; conversation
   try {
     const res = await fetch(`${URL_}/functions/v1/place-call`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${ANON}`, apikey: ANON },
+      headers: { "Content-Type": "application/json", ...(await authHeaders()) },
       body: JSON.stringify({
         to_number: c.tel,
         senior: toProfile(c),
@@ -42,7 +48,9 @@ export async function placeCall(c: CareConfig): Promise<{ ok: true; conversation
     });
     const out = await res.json().catch(() => ({}));
     if (res.ok) return { ok: true, conversationId: out.conversation_id ?? null };
-    if (res.status === 403) return { ok: false, message: "Ten numer nie jest na liście numerów testowych demo." };
+    if (res.status === 401) return { ok: false, message: "Zaloguj się ponownie, aby zadzwonić." };
+    if (res.status === 403) return { ok: false, message: "Asystent dzwoni tylko na polskie numery (+48, 9 cyfr)." };
+    if (res.status === 429) return { ok: false, message: "Osiągnięto limit połączeń demo na tę godzinę. Spróbuj za chwilę." };
     if (String(out.error ?? "").includes("missing secrets")) return { ok: false, message: "Połączenia czekają na konfigurację klucza ElevenLabs." };
     return { ok: false, message: "Nie udało się połączyć. Spróbuj ponownie za chwilę." };
   } catch {
@@ -61,11 +69,11 @@ export interface LiveCall {
   transcript: { role: "ai" | "senior"; text: string }[];
 }
 
-/** Real phone calls of the agent (demo test numbers only — filtered server-side). */
+/** Real phone calls of the agent to Polish numbers (signed-in users only, filtered server-side). */
 export async function listCalls(): Promise<LiveCall[]> {
   if (!URL_ || !ANON) return [];
   try {
-    const res = await fetch(`${URL_}/functions/v1/list-calls`, { headers: { Authorization: `Bearer ${ANON}`, apikey: ANON } });
+    const res = await fetch(`${URL_}/functions/v1/list-calls`, { headers: await authHeaders() });
     if (!res.ok) return [];
     const out = await res.json();
     return out.calls ?? [];
@@ -98,7 +106,7 @@ export async function analyzeCall(conversationId: string): Promise<Analysis | { 
   try {
     const res = await fetch(`${URL_}/functions/v1/analyze-call`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${ANON}`, apikey: ANON },
+      headers: { "Content-Type": "application/json", ...(await authHeaders()) },
       body: JSON.stringify({ conversation_id: conversationId }),
     });
     const out = await res.json().catch(() => ({}));

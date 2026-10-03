@@ -93,7 +93,7 @@ New idea (built entirely at HackYeah 2026)
   - real outbound calls from a +48 number, with automatic hang-up.
 - **AI analysis:** transcript → structured, quoted check-in (OpenAI structured outputs, strict JSON schema), cached per call.
 - **Detection engine:** personal baselines, persistence + CUSUM, red flags, no-contact rule. Evaluated on a labelled synthetic dataset with 13 unit tests.
-- **Backend:** Supabase (Postgres with row-level security, consent enforced in the database, Edge Functions). API keys exist only as server-side secrets. Public endpoints only call or read demo test numbers.
+- **Backend:** Supabase (Postgres with row-level security, consent enforced in the database, Edge Functions). API keys exist only as server-side secrets. Calls require a signed-in user, go only to Polish (+48) numbers and are rate-limited.
 
 **Goal after the hackathon:** a 6-week pilot with ~20 families to check whether children react earlier to a parent's bad week and whether seniors keep answering. Then email digests and a subscription model.
 
@@ -120,7 +120,7 @@ https://github.com/BK006/telefon-do-seniora
 ## 16. Instructions on how to open project
 
 1. Open https://telefon-do-seniora.vercel.app (any modern browser, desktop or mobile).
-2. Click **"Zaloguj się"** (or "Zobacz przykładowy pulpit") and sign in with the jury account: **jury@telefondoseniora.pl** / **Jury-ZxyCE5LcHE** (demo admin account, synthetic data only). A quick-start window asks who to call and how to address them. You can close it to browse the sample data.
+2. Click **"Zaloguj się"** (or "Zobacz przykładowy pulpit") and sign in with the jury account: **jury@telefondoseniora.pl** (password provided in the HackYeah submission form) (demo admin account, synthetic data only). A quick-start window asks who to call and how to address them. You can close it to browse the sample data.
 3. **Dziś (Today):**
    - day status, "Potrzebuje" (needs) and the call streak;
    - 30-day trends against the parent's own norm;
@@ -130,7 +130,7 @@ https://github.com/BK006/telefon-do-seniora
    - open it to see the AI analysis (status, needs, scored answers with quotes) and the full transcript.
 5. **Pytania / Ustawienia:** edit the questions, the schedule and the profile. These settings feed the agent's prompt for the next call.
 6. **"Zacznij za darmo"** on the landing page opens the full 7-step setup wizard.
-7. **Live calls:** for safety, the public demo can only dial our team's test numbers, so pressing "Zadzwoń teraz" with another number shows an explanation. The video shows a live call.
+7. **Live calls:** signed-in users can call any Polish (+48) number; calls are rate-limited (20 per hour for the whole demo). The video shows a live call.
 
 **AI and external resources disclosure:**
 - Models and APIs: ElevenLabs Conversational AI (voice agent, Polish TTS/STT), OpenAI gpt-4.1-mini (structured transcript analysis).

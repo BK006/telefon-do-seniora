@@ -28,15 +28,17 @@ export interface Question {
   prompt: string; // what to find out, in plain Polish
 }
 
+// Phrased without gendered verb forms ("spał(a)") so the model never reads them out as
+// "Pan/Pani"; the agent applies the right grammar from the senior's gender itself.
 export const DEFAULT_QUESTIONS: Question[] = [
-  { id: "sleep", label: "Sen", prompt: "jak spał(a) tej nocy (dobrze / średnio / źle, czy budził(a) się)" },
-  { id: "appetite", label: "Apetyt", prompt: "co jadł(a) i czy ma apetyt" },
-  { id: "mood", label: "Samopoczucie", prompt: "jak się dziś czuje — tylko własnymi słowami seniora" },
+  { id: "sleep", label: "Sen", prompt: "jak minęła noc i jaki był sen (dobry / średni / zły, czy były pobudki)" },
+  { id: "appetite", label: "Apetyt", prompt: "co było dziś do jedzenia i jak z apetytem" },
+  { id: "mood", label: "Samopoczucie", prompt: "jakie jest dziś samopoczucie — tylko własnymi słowami rozmówcy" },
   { id: "pain", label: "Ból", prompt: "czy coś boli, gdzie i jak mocno (bez dopytywania o diagnozę)" },
-  { id: "meds", label: "Leki", prompt: "czy wziął(ęła) leki tak jak zwykle" },
-  { id: "activity", label: "Wyjście z domu", prompt: "czy wychodził(a) dziś z domu" },
-  { id: "social", label: "Kontakt z ludźmi", prompt: "czy rozmawiał(a) dziś z kimś" },
-  { id: "needs", label: "Czy czegoś potrzebuje", prompt: "czy czegoś potrzebuje (zakupy, leki, pomoc, podwiezienie)" },
+  { id: "meds", label: "Leki", prompt: "czy leki zostały wzięte tak jak zwykle" },
+  { id: "activity", label: "Wyjście z domu", prompt: "czy było dziś wyjście z domu" },
+  { id: "social", label: "Kontakt z ludźmi", prompt: "czy była dziś rozmowa z kimś bliskim lub sąsiadem" },
+  { id: "needs", label: "Czy czegoś potrzebuje", prompt: "czy czegoś potrzeba (zakupy, leki, pomoc, podwiezienie)" },
 ];
 
 const list = (xs?: string[]) => (xs && xs.length ? xs.join(", ") : "brak informacji");
@@ -56,7 +58,7 @@ Jesteś ciepłym, spokojnym asystentem AI usługi „Telefon do seniora”. Codz
 
 # Rozmówca
 - Imię i nazwisko: ${p.fullName}; ${age}${p.relation ? `; dla rodziny: ${p.relation}` : ""}.
-- Zwracaj się: „${p.address}”, w formie „${pan}”. Używaj poprawnej formy gramatycznej (${p.gender === "f" ? "spała, jadła, czuła się" : "spał, jadł, czuł się"}).
+- Zwracaj się: „${p.address}”, w formie „${pan}”. Rozmówca to ${p.gender === "f" ? "kobieta" : "mężczyzna"}: używaj wyłącznie form ${p.gender === "f" ? "żeńskich (spała Pani, jadła Pani, czuła się Pani)" : "męskich (spał Pan, jadł Pan, czuł się Pan)"}. Nigdy nie mów „Pan/Pani” ani „spał(a)”.
 ${p.hardOfHearing ? "- Słabiej słyszy: mów wolno, wyraźnie, krótkimi zdaniami; w razie potrzeby powtórz pytanie innymi słowami.\n" : ""}${p.shortCalls ? "- Woli krótkie rozmowy: zmieść się w 2–3 minutach.\n" : ""}
 # Kontekst (tylko po to, by rozmowa była naturalna — NIE do porad medycznych)
 - Choroby przewlekłe: ${list(p.conditions)}.

@@ -7,7 +7,6 @@ export interface QuestionCfg {
   desc: string;
   /** what the agent should find out (goes into the system prompt) */
   ask: string;
-  freq: "d" | "w";
   on: boolean;
   ic: IconName;
   c: Tone;
@@ -43,14 +42,14 @@ export interface CareConfig {
 }
 
 export const QDEF: QuestionCfg[] = [
-  { id: "sen", label: "Sen", desc: "Jak minęła noc", ask: "jak minęła noc i jaki był sen (dobry / średni / zły, czy były pobudki)", freq: "d", on: true, ic: "moon", c: "blue" },
-  { id: "apetyt", label: "Apetyt", desc: "Co dziś jadła", ask: "co było dziś do jedzenia i jak z apetytem", freq: "d", on: true, ic: "fork", c: "orange" },
-  { id: "samop", label: "Samopoczucie", desc: "Jak się dziś czuje, jej słowami", ask: "jakie jest dziś samopoczucie — tylko własnymi słowami rozmówcy", freq: "d", on: true, ic: "smile", c: "purple" },
-  { id: "bol", label: "Ból", desc: "Czy coś ją boli", ask: "czy coś boli, gdzie i jak mocno (bez dopytywania o diagnozę)", freq: "w", on: true, ic: "heart", c: "red" },
-  { id: "leki", label: "Leki", desc: "Czy wzięła leki o swojej porze", ask: "czy leki zostały wzięte o zwykłej porze", freq: "d", on: true, ic: "pill", c: "green" },
-  { id: "wyjscie", label: "Wyjście z domu", desc: "Czy była dziś na zewnątrz", ask: "czy było dziś wyjście z domu", freq: "w", on: true, ic: "door", c: "yellow" },
-  { id: "kontakt", label: "Kontakt z ludźmi", desc: "Z kim ostatnio rozmawiała", ask: "czy była dziś rozmowa z kimś i z kim", freq: "d", on: true, ic: "people", c: "blue" },
-  { id: "potrzeby", label: "Czy czegoś potrzebuje", desc: "Zakupy, lekarstwa, pomoc", ask: "czy czegoś potrzeba (zakupy, leki, pomoc, podwiezienie)", freq: "d", on: true, ic: "bag", c: "orange" },
+  { id: "sen", label: "Sen", desc: "Jak minęła noc", ask: "jak minęła noc i jaki był sen (dobry / średni / zły, czy były pobudki)", on: true, ic: "moon", c: "blue" },
+  { id: "apetyt", label: "Apetyt", desc: "Co dziś jadła", ask: "co było dziś do jedzenia i jak z apetytem", on: true, ic: "fork", c: "orange" },
+  { id: "samop", label: "Samopoczucie", desc: "Jak się dziś czuje, jej słowami", ask: "jakie jest dziś samopoczucie — tylko własnymi słowami rozmówcy", on: true, ic: "smile", c: "purple" },
+  { id: "bol", label: "Ból", desc: "Czy coś ją boli", ask: "czy coś boli, gdzie i jak mocno (bez dopytywania o diagnozę)", on: true, ic: "heart", c: "red" },
+  { id: "leki", label: "Leki", desc: "Czy wzięła leki o swojej porze", ask: "czy leki zostały wzięte o zwykłej porze", on: true, ic: "pill", c: "green" },
+  { id: "wyjscie", label: "Wyjście z domu", desc: "Czy była dziś na zewnątrz", ask: "czy było dziś wyjście z domu", on: true, ic: "door", c: "yellow" },
+  { id: "kontakt", label: "Kontakt z ludźmi", desc: "Z kim ostatnio rozmawiała", ask: "czy była dziś rozmowa z kimś i z kim", on: true, ic: "people", c: "blue" },
+  { id: "potrzeby", label: "Czy czegoś potrzebuje", desc: "Zakupy, lekarstwa, pomoc", ask: "czy czegoś potrzeba (zakupy, leki, pomoc, podwiezienie)", on: true, ic: "bag", c: "orange" },
 ];
 
 export const SAMPLE: CareConfig = {

@@ -360,7 +360,7 @@ export function QuestionsEditor() {
                 arr.splice(to, 0, m);
                 setCfg({ questions: arr });
               }}
-              className="flex flex-wrap items-center gap-3 rounded-[24px] border-2 p-3 pr-4 transition-[border-color,opacity] duration-150 sm:flex-nowrap"
+              className="flex items-center gap-3 rounded-[24px] border-2 p-3 pr-4 transition-[border-color,opacity] duration-150"
               style={{ background: q.on ? "#fff" : "#F7F5FF", borderColor: drag === q.id ? "#C9BCFF" : "#E7E3F0", opacity: drag === q.id ? 0.6 : 1 }}
             >
               <button
@@ -400,10 +400,7 @@ export function QuestionsEditor() {
                 </span>
                 <span className="block text-[15px] font-bold text-[var(--plum-600)]">{q.desc}</span>
               </span>
-              <span className="flex w-full items-center justify-between gap-3 sm:w-auto">
-                <Segmented label={`Jak często pytać: ${q.label}`} value={q.freq} options={[["d", "Codziennie"], ["w", "2× w tygodniu"]]} onChange={(v) => update(q.id, { freq: v })} />
-                <Toggle checked={q.on} onChange={(v) => update(q.id, { on: v })} label={`Pytanie aktywne: ${q.label}`} />
-              </span>
+              <Toggle checked={q.on} onChange={(v) => update(q.id, { on: v })} label={`Pytanie aktywne: ${q.label}`} />
             </li>
           );
         })}
@@ -417,7 +414,7 @@ export function QuestionsEditor() {
           onAdd={() => {
             const v = draft.trim();
             if (!v) return;
-            setCfg({ questions: qs.concat({ id: "w" + Date.now(), label: v, desc: "Własne pytanie", ask: v, freq: "d", on: true, ic: "custom", c: "purple", own: true }) });
+            setCfg({ questions: qs.concat({ id: "w" + Date.now(), label: v, desc: "Własne pytanie", ask: v, on: true, ic: "custom", c: "purple", own: true }) });
             setDraft("");
             setAdding(false);
           }}

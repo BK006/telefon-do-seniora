@@ -1,0 +1,16 @@
+{
+  "name": "telefon-do-seniora",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "eval": "tsx scripts/eval.ts",
+    "bundle": "node scripts/bundle-functions.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}

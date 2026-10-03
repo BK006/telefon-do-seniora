@@ -1,0 +1,9 @@
+.bundles/
+node_modules/
+web/node_modules/
+web/dist/
+.vercel/
+.env*
+!.env.example
+.DS_Store
+*.log

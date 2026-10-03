@@ -132,7 +132,7 @@ https://telefon-do-seniora.vercel.app
 
 ## 15. Code Repository
 
-[Link GitHub]
+https://github.com/BK006/telefon-do-seniora
 
 ## 16. Instructions on how to open project
 

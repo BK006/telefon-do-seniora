@@ -92,9 +92,6 @@ export function Landing() {
           <Btn lg onClick={() => nav("/kreator")}>
             Zacznij za darmo <Icon name="chevronR" size={22} />
           </Btn>
-          <a href="/ops" className="mt-4 text-[15px] font-bold text-[var(--violet-text)] underline-offset-4 hover:underline">
-            Jesteś z ośrodka pomocy społecznej? Zobacz panel dla OPS
-          </a>
         </section>
       </main>
     </div>

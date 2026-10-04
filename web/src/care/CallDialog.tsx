@@ -43,7 +43,7 @@ export function CallDialog({ open, onOpenChange, onConfirm }: { open: boolean; o
           <Field label="Numer telefonu" htmlFor="call-tel" help="Sprawdź numer przed połączeniem. Dzwonimy tylko na polskie numery.">
             <div className="flex items-stretch gap-2">
               <span className="grid h-[54px] place-items-center rounded-[16px] border-2 border-[var(--line)] bg-[var(--bg-muted)] px-4 text-[17px] font-extrabold">+48</span>
-              <TextInput id="call-tel" inputMode="tel" autoComplete="tel-national" value={tel} onChange={(e) => setTel(e.target.value)} className="flex-1" autoFocus />
+              <TextInput id="call-tel" inputMode="tel" autoComplete="tel-national" value={tel} onChange={(e) => setTel(e.target.value)} className="flex-1" autoFocus placeholder="512 665 208" />
             </div>
           </Field>
           {!valid && tel.trim() !== "" && <p className="text-[15px] font-bold text-[var(--red-text)]">Wpisz 9 cyfr numeru telefonu.</p>}

@@ -129,7 +129,7 @@ export function QuickStart({ open, onOpenChange, mode = "fresh" }: { open: boole
           <Field label="Numer telefonu" htmlFor="qs-tel">
             <div className="flex items-stretch gap-2">
               <span className="grid h-[54px] place-items-center rounded-[16px] border-2 border-[var(--line)] bg-[var(--bg-muted)] px-4 text-[17px] font-extrabold">+48</span>
-              <TextInput id="qs-tel" inputMode="tel" autoComplete="tel-national" value={tel} onChange={(e) => setTel(e.target.value)} className="flex-1" placeholder="601 234 567" />
+              <TextInput id="qs-tel" inputMode="tel" autoComplete="tel-national" value={tel} onChange={(e) => setTel(e.target.value)} className="flex-1" placeholder="512 665 208" />
             </div>
           </Field>
 

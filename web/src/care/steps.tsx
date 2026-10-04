@@ -31,6 +31,12 @@ function useDraft() {
   return { get: (k: string) => d[k] ?? "", set: (k: string, v: string) => setD((p) => ({ ...p, [k]: v })) };
 }
 
+// Address suggestion from the chosen relation (vocative), e.g. "Mamo".
+const VOC: Record<string, string> = { Mama: "Mamo", Tata: "Tato", Babcia: "Babciu", Dziadek: "Dziadku", Ciocia: "Ciociu" };
+function formaHints(cfg: CareConfig) {
+  return VOC[cfg.relacja] ? [VOC[cfg.relacja]] : [];
+}
+
 function multi(cfg: CareConfig, setCfg: (p: Partial<CareConfig>) => void, key: "choroby" | "ruch" | "zaint", options: string[]) {
   const sel = cfg[key];
   const all = options.concat(sel.filter((x) => !options.includes(x)));
@@ -55,20 +61,20 @@ export function StepForm({ step }: { step: number }) {
     return (
       <div className="space-y-6">
         <Field label="Imię i nazwisko" htmlFor="imie">
-          <TextInput id="imie" value={cfg.imie} onChange={(e) => setCfg({ imie: e.target.value })} autoComplete="off" />
+          <TextInput id="imie" value={cfg.imie} onChange={(e) => setCfg({ imie: e.target.value })} autoComplete="off" placeholder="np. Halina Kowalska" />
         </Field>
         <div className="grid gap-6 sm:grid-cols-2">
           <Field label="Rok urodzenia" htmlFor="rok">
-            <TextInput id="rok" inputMode="numeric" value={cfg.rok} onChange={(e) => setCfg({ rok: e.target.value })} />
+            <TextInput id="rok" inputMode="numeric" value={cfg.rok} onChange={(e) => setCfg({ rok: e.target.value })} placeholder="np. 1946" />
           </Field>
           <Field label="Płeć (do poprawnej formy: spała / spał)">
             <Segmented label="Płeć" value={cfg.plec} options={[["f", "Kobieta"], ["m", "Mężczyzna"]]} onChange={(v) => setCfg({ plec: v })} />
           </Field>
         </div>
         <Field label="Jak asystent ma się do niej zwracać?" htmlFor="forma">
-          <TextInput id="forma" value={cfg.forma} onChange={(e) => setCfg({ forma: e.target.value })} />
+          <TextInput id="forma" value={cfg.forma} onChange={(e) => setCfg({ forma: e.target.value })} placeholder="np. Pani Halino, Mamo" />
           <div className="flex flex-wrap gap-2 pt-1">
-            {["Pani Halino", "Pani Halinko", "Halinko", "Mamo"].map((o) => (
+            {formaHints(cfg).map((o) => (
               <Chip key={o} on={cfg.forma === o} onClick={() => setCfg({ forma: o })}>
                 {o}
               </Chip>
@@ -90,8 +96,8 @@ export function StepForm({ step }: { step: number }) {
             ))}
           </div>
         </Field>
-        <Field label="Twoje imię (w dopełniaczu)" htmlFor="caller" help="Asystent powie: „Dzwonię w imieniu Kasi”.">
-          <TextInput id="caller" value={cfg.callerName} onChange={(e) => setCfg({ callerName: e.target.value })} />
+        <Field label="Twoje imię (w dopełniaczu)" htmlFor="caller" help={`Asystent powie: „Dzwonię w imieniu ${cfg.callerName.trim() || "…"}”.`}>
+          <TextInput id="caller" value={cfg.callerName} onChange={(e) => setCfg({ callerName: e.target.value })} placeholder="np. Kasi" />
         </Field>
         <Card className="divide-y-2 divide-[var(--bg-muted)] py-2">
           <SwitchRow label="Słabiej słyszy" desc="Asystent mówi wolniej i głośniej" checked={cfg.slabiej} onChange={(v) => setCfg({ slabiej: v })} />

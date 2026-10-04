@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "./icons";
 import { Mascot } from "./Mascot";
-import { useCare } from "./state";
+import { EMPTY, useCare } from "./state";
 import { StepForm, STEPS, StepTip } from "./steps";
 import { Btn } from "./ui";
 
@@ -16,14 +16,14 @@ const scrollTop = () => {
 
 export function Wizard() {
   const nav = useNavigate();
-  const { cfg, setCfg } = useCare();
+  const { cfg, replaceCfg } = useCare();
   const [step, setStep] = useState(0);
   const last = step === STEPS.length - 1;
   const blocked = last && !cfg.zgoda;
 
   useEffect(() => {
-    // A fresh wizard run must collect consent again.
-    setCfg({ zgoda: false });
+    // Every wizard run starts blank (no pre-filled person, number or consent).
+    replaceCfg({ ...EMPTY, questions: EMPTY.questions.map((q) => ({ ...q })) });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

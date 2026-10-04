@@ -80,6 +80,33 @@ export const SAMPLE: CareConfig = {
   zgoda: true,
 };
 
+// Blank form for a fresh onboarding: nothing about any person is pre-filled.
+export const EMPTY: CareConfig = {
+  imie: "",
+  forma: "",
+  plec: "f",
+  rok: "",
+  tel: "",
+  relacja: "",
+  callerName: "",
+  slabiej: false,
+  krotkie: false,
+  choroby: [],
+  historia: "",
+  leki: [],
+  ruch: [],
+  zaint: [],
+  bliscy: [],
+  tematy: "",
+  unikac: [],
+  questions: QDEF.map((q) => ({ ...q })),
+  dni: [true, true, true, true, true, true, true],
+  sloty: ["10:00"],
+  retryH: 2,
+  retryMax: 2,
+  zgoda: false,
+};
+
 export interface Need {
   t: string;
   src: string;
@@ -120,7 +147,7 @@ function save(k: string, v: unknown) {
 }
 
 export function CareProvider({ children }: { children: ReactNode }) {
-  const [cfg, setCfgState] = useState<CareConfig>(() => load("tds.care.cfg", SAMPLE));
+  const [cfg, setCfgState] = useState<CareConfig>(() => load("tds.care.cfg", EMPTY));
   // Sample needs, shown only in the demo dashboard states.
   const [needs, setNeeds] = useState<Need[]>([
     { t: "Chleb i mleko", src: "z rozmowy 3 paź", done: false },

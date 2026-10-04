@@ -120,6 +120,6 @@ https://github.com/BK006/telefon-do-seniora
 ## 16. Instructions on how to open project
 
 1. Open https://telefon-do-seniora.vercel.app (any modern browser, desktop or mobile).
-2. Click **"Zaloguj się"** (or "Zobacz przykładowy pulpit") and sign in with the jury account: **jury@telefondoseniora.pl** (password provided in the HackYeah submission form) (demo admin account, synthetic data only). A quick-start window asks who to call and how to address them. You can close it to browse the sample data.
+2. Click **"Zaloguj się"** (top right) and sign in with the jury account: **jury@telefondoseniora.pl** (password provided in the HackYeah submission form) (demo admin account, synthetic data only). A quick-start window asks who to call and how to address them. You can close it to browse the sample data.
 3. **Dziś (Today):** starts clean ("waiting for the first call"). Press **"Zadzwoń teraz na próbę"** with your own Polish number (set it in the quick-start window) to receive a real call; afterwards the dashboard shows the day status, needs and summary from that call. "Demo: pokaż inny stan pulpitu" at the bottom shows sample states (all good, worth calling, urgent, no answer, loading) with 30-day trends.
 4. **Rozmowy (Calls):** every call placed from the app, with the AI analysis (status, needs, scored answers with quotes) and the full transcript.

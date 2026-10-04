@@ -137,6 +137,6 @@ https://github.com/BK006/telefon-do-seniora
 ## 16. Instructions on how to open project
 
 1. Otwórz https://telefon-do-seniora.vercel.app (dowolna nowoczesna przeglądarka, komputer lub telefon).
-2. Kliknij **„Zaloguj się”** (albo „Zobacz przykładowy pulpit”) i zaloguj się kontem dla jury: **jury@telefondoseniora.pl** (hasło w formularzu zgłoszeniowym HackYeah) (konto demo, wyłącznie dane syntetyczne). Okno szybkiego startu zapyta, do kogo dzwonić i jak się zwracać. Możesz je zamknąć, żeby przeglądać przykładowe dane.
+2. Kliknij **„Zaloguj się”** (prawy górny róg) i zaloguj się kontem dla jury: **jury@telefondoseniora.pl** (hasło w formularzu zgłoszeniowym HackYeah) (konto demo, wyłącznie dane syntetyczne). Okno szybkiego startu zapyta, do kogo dzwonić i jak się zwracać. Możesz je zamknąć, żeby przeglądać przykładowe dane.
 3. **Dziś:** startuje czysto („Czekam na pierwszą rozmowę”). Kliknij **„Zadzwoń teraz na próbę”** z własnym polskim numerem (wpisz go w oknie szybkiego startu), żeby odebrać prawdziwy telefon; potem pulpit pokaże status dnia, potrzeby i podsumowanie z tej rozmowy. „Demo: pokaż inny stan pulpitu” na dole pokazuje przykładowe stany (w porządku, warto zadzwonić, pilne, nie odebrała, ładowanie) z trendami z 30 dni.
 4. **Rozmowy:** każde połączenie wykonane z aplikacji, z analizą AI (status, potrzeby, oceny z cytatami) i pełnym zapisem.

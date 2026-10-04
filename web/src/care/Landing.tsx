@@ -42,9 +42,6 @@ export function Landing() {
               <Btn lg onClick={() => nav("/kreator")}>
                 Zacznij za darmo
               </Btn>
-              <Btn lg variant="white" onClick={() => nav("/app")}>
-                Zobacz przykładowy pulpit
-              </Btn>
             </div>
           </div>
           <div className="relative mx-auto flex w-full max-w-[420px] flex-col items-center">

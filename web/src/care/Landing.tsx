@@ -6,7 +6,7 @@ import { Icon, IconTile, type IconName, type Tone } from "./icons";
 const HOW: { n: number; title: string; text: string; icon: IconName; tone: Tone }[] = [
   { n: 1, title: "Ustaw rozmowy", text: "Napisz, jak zwracać się do mamy, o czym lubi rozmawiać i o co ją pytać.", icon: "sliders", tone: "green" },
   { n: 2, title: "Asystent dzwoni", text: "Codziennie o wybranej porze. Krótko, ciepło i zawsze uprzejmie.", icon: "phone", tone: "blue" },
-  { n: 3, title: "Dostajesz podsumowanie", text: "E-mail i pulpit pokażą, jak mama się czuje i czy czegoś potrzebuje.", icon: "mail", tone: "orange" },
+  { n: 3, title: "Dostajesz podsumowanie", text: "Powiadomienie na telefonie i pulpit pokażą, jak mama się czuje i czy czegoś potrzebuje.", icon: "check", tone: "orange" },
 ];
 const TRUST: { title: string; text: string; icon: IconName; tone: Tone }[] = [
   { title: "Zawsze przedstawia się jako AI", text: "Pierwsze zdanie każdej rozmowy mówi, że dzwoni asystent, a nie człowiek.", icon: "bot", tone: "blue" },

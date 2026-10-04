@@ -36,8 +36,6 @@ export interface CareConfig {
   sloty: string[];
   retryH: 1 | 2 | 3;
   retryMax: 1 | 2 | 3;
-  emaile: string[];
-  pow: { natychmiast: boolean; podsum: boolean; tryb: "kazda" | "dzien"; tydz: boolean; potrzeby: boolean; nieodebrala: boolean };
   zgoda: boolean;
 }
 
@@ -79,8 +77,6 @@ export const SAMPLE: CareConfig = {
   sloty: ["10:00", "18:00"],
   retryH: 2,
   retryMax: 2,
-  emaile: ["kasia.kowalska@gmail.com", "tomek.kowalski@wp.pl"],
-  pow: { natychmiast: true, podsum: true, tryb: "kazda", tydz: true, potrzeby: true, nieodebrala: true },
   zgoda: true,
 };
 

@@ -46,3 +46,13 @@ Klucz anon jest publiczny z założenia; dane chroni RLS. Klucza `service_role` 
 - Numer: +48 732 098 804 (Telnyx SIP), `phnum_1201m1hh0znbe8rvdksm0ehqx6hy` → secret `ELEVENLABS_PHONE_NUMBER_ID`.
   Inbound: przypięty do agenta. Outbound: `POST /v1/convai/sip-trunk/outbound-call` z `agent_id`, `agent_phone_number_id`, `to_number` i `conversation_initiation_client_data.dynamic_variables`.
 - Dzwonienie: `place-call` wymaga zalogowanego użytkownika (JWT Supabase Auth), dzwoni tylko na numery +48 i ma limit 20 połączeń na godzinę (tabela `call_log`). Secret `ALLOWED_CALL_NUMBERS` nie jest już używany.
+
+## Powiadomienia push (Web Push / VAPID)
+
+| Nazwa | Gdzie | Do czego |
+|---|---|---|
+| `VAPID_PUBLIC_KEY` | Supabase Secrets | klucz publiczny Web Push (ten sam co `VITE_VAPID_PUBLIC_KEY`) |
+| `VAPID_PRIVATE_KEY` | Supabase Secrets | podpisywanie powiadomień — tylko serwer |
+| `VAPID_SUBJECT` | Supabase Secrets | kontakt nadawcy (`mailto:`) |
+| `CRON_SECRET` | Supabase Secrets + zadanie pg_cron | autoryzacja wywołań `process-calls` co minutę |
+| `VITE_VAPID_PUBLIC_KEY` | build frontendu / Vercel | publiczny klucz do subskrypcji w przeglądarce |

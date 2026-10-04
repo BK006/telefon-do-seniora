@@ -19,6 +19,7 @@ Rodzina (aplikacja)  →  place-call  →  ElevenLabs agent (+48, SIP)  →  roz
 - **Agent głosowy** (ElevenLabs): prompt i pierwsza wiadomość to wyłącznie zmienne `{{system_prompt}}` i `{{first_message}}`. Funkcja `place-call` buduje je dla każdego seniora z danych z kreatora ([prompt.ts](supabase/functions/_shared/agent/prompt.ts)). Agent zawsze ujawnia, że jest AI, kieruje do 112, nie prosi o pieniądze ani hasła i pyta o zgodę na przekazanie informacji.
 - **Analiza** ([extract.ts](supabase/functions/_shared/analysis/extract.ts)): jedna funkcja `extractCheckIn()`, więc dostawcę modelu zmienia się w jednym miejscu. Schemat JSON działa w trybie strict. Czego nie poruszono, to `null`. Każda wartość ma cytat.
 - **Wykrywanie zmiany** ([engine/](supabase/functions/_shared/engine/)): norma osobista (mediana + MAD z 14 dni, minimum 7 dni kalibracji), odporny z-score, utrzymywanie się zmiany przez 3 dni albo CUSUM na ≥2 wskaźnikach. Czerwona flaga oznacza od razu poziom 3, a 2 dni bez kontaktu poziom „brak kontaktu”. Wszystkie progi są w [config.ts](supabase/functions/_shared/engine/config.ts).
+- **Powiadomienia push** (PWA): aplikacja instaluje się na telefonie; pg_cron co minutę wywołuje `process-calls`, który po zakończonej rozmowie robi analizę i wysyła Web Push (VAPID) ze statusem dnia i potrzebami.
 - **Baza** (Supabase): RLS na wszystkich tabelach. Zgoda seniora jest egzekwowana w widokach SQL ([0002_rls.sql](supabase/migrations/0002_rls.sql)), nie tylko w UI.
 
 ## Struktura
@@ -29,7 +30,7 @@ web/                         React + Vite + Tailwind + shadcn/ui
   src/pages, src/components  panel dla ośrodków pomocy społecznej (/ops) na tym samym silniku
 supabase/
   migrations/                schemat, RLS, widoki zgody
-  functions/                 place-call, list-calls, analyze-call, seed-synthetic, health
+  functions/                 place-call, list-calls, analyze-call, push, process-calls, seed-synthetic, health
   functions/_shared/         engine (detekcja), analysis (OpenAI), agent (prompt), synthetic (dane demo)
 tests/engine.test.ts         testy silnika na scenariuszach
 scripts/                     bundler Edge Functions, ewaluacja

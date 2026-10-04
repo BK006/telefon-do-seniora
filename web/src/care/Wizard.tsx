@@ -97,7 +97,7 @@ export function Success() {
         </div>
         <h1 className="mt-6 text-[34px] leading-tight font-black">Pierwsza rozmowa zaplanowana!</h1>
         <p className="mt-3 text-[19px] text-[var(--plum-600)]">
-          Asystent zadzwoni do {cfg.forma ? `„${cfg.forma}”` : "mamy"} jutro o {cfg.sloty[0]}. Podsumowanie wyślemy na <strong className="text-[var(--plum-900)]">{cfg.emaile[0] ?? "Twój e-mail"}</strong>.
+          Asystent zadzwoni do {cfg.forma ? `„${cfg.forma}”` : "mamy"} jutro o {cfg.sloty[0]}. Po rozmowie dostaniesz powiadomienie na telefon.
         </p>
         <Btn
           lg

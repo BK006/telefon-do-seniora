@@ -34,7 +34,7 @@ Sources:
 **How it works for the adult child (our customer):**
 1. **Set up in minutes.** Who your parent is and how the assistant should address them ("Pani Halino", "Mamo"), their phone number, health context (conditions, medication times), what they enjoy talking about and what to avoid, which questions to ask, and which days and times to call. A 3-question quick start gets you to a first test call in under a minute.
 2. **The assistant calls.** It rings a regular phone, with no app or smartphone needed on the parent's side. It speaks Polish slowly and kindly and asks about sleep, appetite, mood, pain, medication, going out, contact with people and whether they need anything.
-3. **You get a short summary in the app dashboard.** It shows a day status (all good / worth calling / urgent), what your parent needs (e.g. bread and milk, a lift to the doctor on Thursday), answers backed by your parent's own words, and the full transcript. You're alerted when the pattern changes, not on every bad day. (Email digests are in preparation.)
+3. **You get a push notification and a summary in the app.** The app installs on your phone (PWA, "Add to Home Screen"); after every call a push notification arrives with the day status and needs. It shows a day status (all good / worth calling / urgent), what your parent needs (e.g. bread and milk, a lift to the doctor on Thursday), answers backed by your parent's own words, and the full transcript. You're alerted when the pattern changes, not on every bad day.
 
 **The role of AI and how the parts work together:**
 - **Voice:** ElevenLabs Conversational AI calls from a Polish +48 number. The agent's prompt is built per senior from what the family entered, so the conversation is personal ("Did Zosia call from Kraków?").
@@ -58,7 +58,7 @@ Sources:
 **Limitations (honestly):**
 - The 30-day history in the demo is synthetic; only the test calls are real.
 - There is no clinical validation yet; the next step is a pilot with real families.
-- Pricing and willingness to pay still need testing; email notifications and shared sibling accounts are in preparation.
+- Pricing and willingness to pay still need testing; shared sibling accounts are in preparation.
 - Mood is taken only from what the senior says; we deliberately do not analyse tone of voice.
 - A legal review (GDPR, AI Act, senior consent flow) is needed before launch.
 
@@ -91,11 +91,12 @@ New idea (built entirely at HackYeah 2026)
   - prompt fully generated per senior;
   - safety rules (AI disclosure, 112, anti-scam, consent);
   - real outbound calls from a +48 number, with automatic hang-up.
+- **Push notifications (PWA):** installable app with a service worker; after each finished call a scheduled job (pg_cron, every minute) analyses it and sends a Web Push (VAPID) with the day status and needs.
 - **AI analysis:** transcript → structured, quoted check-in (OpenAI structured outputs, strict JSON schema), cached per call.
 - **Detection engine:** personal baselines, persistence + CUSUM, red flags, no-contact rule. Evaluated on a labelled synthetic dataset with 13 unit tests.
 - **Backend:** Supabase (Postgres with row-level security, consent enforced in the database, Edge Functions). API keys exist only as server-side secrets. Calls require a signed-in user, go only to Polish (+48) numbers and are rate-limited.
 
-**Goal after the hackathon:** a 6-week pilot with ~20 families to check whether children react earlier to a parent's bad week and whether seniors keep answering. Then email digests and a subscription model.
+**Goal after the hackathon:** a 6-week pilot with ~20 families to check whether children react earlier to a parent's bad week and whether seniors keep answering. Then a subscription model and shared accounts for siblings.
 
 ## 9. Team status
 

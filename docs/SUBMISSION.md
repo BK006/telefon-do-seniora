@@ -45,7 +45,7 @@ Dzisiejsze rozwiązania nie zamykają tej luki:
 
    Szybki start (3 pytania) pozwala zrobić pierwszy testowy telefon w mniej niż minutę.
 2. **Asystent dzwoni** na zwykły telefon; rodzic nie potrzebuje aplikacji ani smartfona. Mówi po polsku, wolno i życzliwie. Pyta o sen, apetyt, samopoczucie, ból, leki, wyjście z domu, kontakt z ludźmi i o to, czy czegoś potrzebuje.
-3. **Dostajesz krótkie podsumowanie:**
+3. **Dostajesz powiadomienie push i podsumowanie w aplikacji** (aplikacja instaluje się na telefonie jako PWA):
    - status dnia (wszystko w porządku / warto zadzwonić / pilne);
    - czego rodzic potrzebuje (np. chleb i mleko, podwiezienie do lekarza w czwartek);
    - odpowiedzi poparte jego własnymi słowami;
@@ -108,11 +108,12 @@ Nowy pomysł (powstał w całości na HackYeah 2026)
   - prompt generowany w całości per senior;
   - zasady bezpieczeństwa (ujawnienie AI, 112, ochrona przed oszustwami, zgoda);
   - prawdziwe połączenia wychodzące z numeru +48 z automatycznym rozłączaniem.
+- **Powiadomienia push (PWA):** aplikację można dodać do ekranu głównego; po każdej zakończonej rozmowie zadanie cykliczne (pg_cron, co minutę) analizuje ją i wysyła Web Push (VAPID) ze statusem dnia i potrzebami.
 - **Analiza AI:** zapis rozmowy → ustrukturyzowany rekord z cytatami (OpenAI structured outputs, schemat JSON w trybie strict), zapamiętywany per rozmowa.
 - **Silnik wykrywania:** normy osobiste, utrzymywanie się zmiany + CUSUM, czerwone flagi, reguła „brak kontaktu”. Ewaluacja na oznaczonym zbiorze syntetycznym, 13 testów jednostkowych.
 - **Backend:** Supabase (Postgres z row-level security, zgoda egzekwowana w bazie, Edge Functions). Klucze API wyłącznie jako sekrety po stronie serwera. Połączenia wymagają zalogowania, idą tylko na numery +48 i mają limit na godzinę.
 
-**Cel po hackathonie:** 6-tygodniowy pilotaż z ok. 20 rodzinami. Sprawdzamy, czy dzieci szybciej reagują na gorszy tydzień rodzica i czy seniorzy chętnie odbierają. Potem podsumowania e-mailem i model abonamentowy.
+**Cel po hackathonie:** 6-tygodniowy pilotaż z ok. 20 rodzinami. Sprawdzamy, czy dzieci szybciej reagują na gorszy tydzień rodzica i czy seniorzy chętnie odbierają. Potem model abonamentowy i wspólne konta dla rodzeństwa.
 
 ## 9. Team status
 

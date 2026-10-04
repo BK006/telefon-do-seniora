@@ -2,6 +2,7 @@
 import { useState, type DragEvent, type KeyboardEvent } from "react";
 import { Mascot, type Mood } from "./Mascot";
 import { Icon, IconTile, TONE, type IconName, type Tone } from "./icons";
+import { PushCard } from "./PushCard";
 import { callSummary, DF, DN, introSentence, useCare, type CareConfig, type QuestionCfg } from "./state";
 import { AddField, Btn, Card, Chip, Field, RemovableChip, Segmented, SwitchRow, TextArea, TextInput, Toggle } from "./ui";
 
@@ -11,7 +12,7 @@ export const STEPS: { title: string; set: string; tip: string; mood: Mood; ic: I
   { title: "Co lubi i o czym rozmawiać", set: "Co lubi i o czym rozmawiać", tip: "O kocie i działce rozmawia się najprzyjemniej. Napisz też, czego lepiej nie poruszać.", mood: "radosc", ic: "star", c: "yellow" },
   { title: "Co mam zebrać w rozmowie?", set: "Pytania", tip: "Ułóż pytania w kolejności, w jakiej mam je zadawać. Wyłącz te, które nie są potrzebne.", mood: "zamyslenie", ic: "list", c: "blue" },
   { title: "Kiedy dzwonić?", set: "Kiedy dzwonić", tip: "Najlepiej o stałej porze, kiedy mama jest w domu, np. po śniadaniu.", mood: "czeka", ic: "calendar", c: "purple" },
-  { title: "Jak mam Cię powiadamiać?", set: "Powiadomienia", tip: "Jeśli usłyszę coś niepokojącego, napiszę od razu. Resztę zbiorę w podsumowaniu.", mood: "troska", ic: "mail", c: "orange" },
+  { title: "Jak mam Cię powiadamiać?", set: "Powiadomienia", tip: "Wyślę powiadomienie na Twój telefon po każdej rozmowie, a od razu — jeśli usłyszę coś niepokojącego.", mood: "troska", ic: "phone", c: "orange" },
   { title: "Podgląd i zgoda", set: "Przedstawienie asystenta i zgoda", tip: "Tak się przedstawię. Zawsze mówię, że jestem asystentem AI.", mood: "radosc", ic: "shield", c: "green" },
 ];
 
@@ -43,7 +44,7 @@ function multi(cfg: CareConfig, setCfg: (p: Partial<CareConfig>) => void, key: "
 export function StepForm({ step }: { step: number }) {
   const { cfg, setCfg } = useCare();
   const draft = useDraft();
-  const addTo = (key: "choroby" | "zaint" | "bliscy" | "unikac" | "emaile", dk: string) => {
+  const addTo = (key: "choroby" | "zaint" | "bliscy" | "unikac", dk: string) => {
     const v = draft.get(dk).trim();
     if (!v) return;
     if (!cfg[key].includes(v)) setCfg({ [key]: cfg[key].concat(v) } as Partial<CareConfig>);
@@ -231,41 +232,7 @@ export function StepForm({ step }: { step: number }) {
       </div>
     );
 
-  if (step === 5) {
-    const P = cfg.pow;
-    const setP = (k: keyof typeof P, v: boolean | string) => setCfg({ pow: { ...P, [k]: v } });
-    const rows: { k: "natychmiast" | "podsum" | "tydz" | "potrzeby" | "nieodebrala"; label: string; desc: string; ic: IconName; c: Tone }[] = [
-      { k: "natychmiast", label: "Natychmiast przy niepokojącym sygnale", desc: "Np. gdy mama wspomni o upadku albo poprosi o pomoc", ic: "alert", c: "red" },
-      { k: "podsum", label: "Podsumowanie rozmów", desc: "Jak mama się czuje i o czym rozmawialiśmy", ic: "mail", c: "green" },
-      { k: "tydz", label: "Tygodniowe podsumowanie", desc: "W niedzielę wieczorem", ic: "calendar", c: "purple" },
-      { k: "potrzeby", label: "Gdy czegoś potrzebuje", desc: "Zakupy, lekarstwa, pomoc", ic: "bag", c: "orange" },
-      { k: "nieodebrala", label: "Gdy nie odbierze 2 dni z rzędu", desc: "Po wszystkich ponownych próbach", ic: "missed", c: "blue" },
-    ];
-    return (
-      <div className="space-y-6">
-        <Field label="Na jakie adresy e-mail?">
-          <div className="flex flex-wrap gap-2">
-            {cfg.emaile.map((m) => (
-              <RemovableChip key={m} label={m} onRemove={() => setCfg({ emaile: cfg.emaile.filter((x) => x !== m) })} />
-            ))}
-          </div>
-          <AddField label="Dodaj adres e-mail" placeholder="adres@email.pl" value={draft.get("email")} onChange={(v) => draft.set("email", v)} onAdd={() => addTo("emaile", "email")} />
-        </Field>
-        <Card className="py-2">
-          {rows.map((r, i) => (
-            <div key={r.k} className={i ? "border-t-2 border-[var(--bg-muted)]" : ""}>
-              <SwitchRow label={r.label} desc={r.desc} checked={P[r.k]} onChange={(v) => setP(r.k, v)} icon={<IconTile name={r.ic} tone={r.c} size={44} />} />
-              {r.k === "podsum" && P.podsum && (
-                <div className="pb-3 pl-[60px]">
-                  <Segmented label="Jak często podsumowanie" value={P.tryb} options={[["kazda", "Po każdej rozmowie"], ["dzien", "Raz dziennie"]]} onChange={(v) => setP("tryb", v)} />
-                </div>
-              )}
-            </div>
-          ))}
-        </Card>
-      </div>
-    );
-  }
+  if (step === 5) return <PushCard />;
 
   return <PreviewConsent />;
 }
@@ -312,7 +279,7 @@ function PreviewConsent() {
           <dt className="font-extrabold text-[var(--plum-600)]">Pytania</dt>
           <dd>{active} aktywne z {cfg.questions.length}</dd>
           <dt className="font-extrabold text-[var(--plum-600)]">Powiadomienia</dt>
-          <dd>{cfg.emaile.join(", ") || "brak adresu"}</dd>
+          <dd>Push na telefonie (aplikacja PWA)</dd>
         </dl>
       </Card>
       <label className="flex cursor-pointer items-start gap-4 rounded-[24px] border-2 p-5" style={{ borderColor: cfg.zgoda ? "var(--violet-200)" : "var(--line)", background: cfg.zgoda ? "var(--violet-50)" : "#fff" }}>

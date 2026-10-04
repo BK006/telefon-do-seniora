@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Icon, IconTile } from "./icons";
+import { PushCard } from "./PushCard";
 import { QuickStart } from "./QuickStart";
 import { callSummary, useCare, type CareConfig } from "./state";
 import { QuestionsEditor, StepForm, STEPS } from "./steps";
@@ -26,7 +27,7 @@ function sectionSummary(c: CareConfig, i: number) {
     `${c.zaint.slice(0, 3).join(", ")}${c.zaint.length > 3 ? "…" : ""}`,
     `Aktywne: ${c.questions.filter((q) => q.on).length} z ${c.questions.length}`,
     callSummary(c).split(".")[0],
-    `${c.emaile.length === 1 ? "1 adres" : `${c.emaile.length} adresy`} e-mail`,
+    "Push na telefonie po każdej rozmowie",
     "Pierwsze zdanie rozmowy i zgoda",
   ][i];
 }
@@ -59,6 +60,7 @@ export function Settings() {
         </div>
       </Card>
       <QuickStart open={editWho} onOpenChange={setEditWho} mode="edit" />
+      <PushCard />
       <Card>
         <div className="flex items-center gap-4">
           <IconTile name="pause" tone="purple" size={48} />

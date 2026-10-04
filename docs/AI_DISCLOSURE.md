@@ -3,7 +3,7 @@
 ## Modele i API używane przez produkt
 | Zasób | Do czego | Gdzie w kodzie |
 |---|---|---|
-| ElevenLabs Conversational AI (agent „TELEFON DO SENIORA(DONT DELETE)”, głos „Aleksandra”) | rozmowa głosowa po polsku, STT/TTS, połączenia wychodzące | `supabase/functions/place-call`, `list-calls` |
+| ElevenLabs Conversational AI (agent „TELEFON DO SENIORA DONT DELETE”, głos „Aleksandra”) | rozmowa głosowa po polsku, STT/TTS, połączenia wychodzące | `supabase/functions/place-call`, `list-calls` |
 | OpenAI `gpt-4.1-mini` (structured outputs, strict JSON schema) | zamiana zapisu rozmowy w rekord z cytatami | `supabase/functions/_shared/analysis/extract.ts`, `analyze-call` |
 | Telnyx (trunk SIP, numer +48) | telefonia | konfiguracja w ElevenLabs |
 

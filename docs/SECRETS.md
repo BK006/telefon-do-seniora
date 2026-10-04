@@ -41,7 +41,7 @@ Klucz anon jest publiczny z założenia; dane chroni RLS. Klucza `service_role` 
 
 ## ElevenLabs — agent i numer (identyfikatory, nie sekrety)
 
-- Agent: **TELEFON DO SENIORA(DONT DELETE)** — `agent_1401m41jqxcqev586efttgk8t6ez` → wpisz jako secret `ELEVENLABS_AGENT_ID`.
+- Agent: **TELEFON DO SENIORA DONT DELETE** — `agent_1401m41jqxcqev586efttgk8t6ez` → wpisz jako secret `ELEVENLABS_AGENT_ID`.
   Prompt = `{{system_prompt}}`, pierwsza wiadomość = `{{first_message}}`; backend przekazuje obie wartości w `dynamic_variables` przy każdym połączeniu.
 - Numer: +48 732 098 804 (Telnyx SIP), `phnum_1201m1hh0znbe8rvdksm0ehqx6hy` → secret `ELEVENLABS_PHONE_NUMBER_ID`.
   Inbound: przypięty do agenta. Outbound: `POST /v1/convai/sip-trunk/outbound-call` z `agent_id`, `agent_phone_number_id`, `to_number` i `conversation_initiation_client_data.dynamic_variables`.

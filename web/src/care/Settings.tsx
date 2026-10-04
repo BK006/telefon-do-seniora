@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Icon, IconTile } from "./icons";
+import { QuickStart } from "./QuickStart";
 import { callSummary, useCare, type CareConfig } from "./state";
 import { QuestionsEditor, StepForm, STEPS } from "./steps";
 import { Btn, Card, Field, TextInput, Toggle } from "./ui";
@@ -32,9 +33,32 @@ function sectionSummary(c: CareConfig, i: number) {
 
 export function Settings() {
   const { cfg, pause, setPause } = useCare();
+  const [editWho, setEditWho] = useState(false);
   return (
     <div className="space-y-5">
       <h1 className="text-[30px] font-black">Ustawienia</h1>
+      <Card>
+        <div className="flex flex-wrap items-center gap-4">
+          <IconTile name="user" tone="green" size={48} />
+          <div className="min-w-0 flex-1">
+            <h2 className="text-[20px] font-black">Do kogo dzwonimy</h2>
+            <dl className="mt-1 grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 text-[16px]">
+              <dt className="font-bold text-[var(--plum-600)]">Kto</dt>
+              <dd className="font-extrabold">{cfg.relacja || "—"}{cfg.imie ? ` · ${cfg.imie}` : ""}</dd>
+              <dt className="font-bold text-[var(--plum-600)]">Zwracanie się</dt>
+              <dd className="font-extrabold">{cfg.forma ? `„${cfg.forma}”` : "—"} · {cfg.plec === "f" ? "Pani" : "Pan"}</dd>
+              <dt className="font-bold text-[var(--plum-600)]">Telefon</dt>
+              <dd className="font-extrabold">{cfg.tel ? `+48 ${cfg.tel}` : "—"}</dd>
+              <dt className="font-bold text-[var(--plum-600)]">W imieniu</dt>
+              <dd className="font-extrabold">{cfg.callerName || "—"}</dd>
+            </dl>
+          </div>
+          <Btn variant="white" onClick={() => setEditWho(true)}>
+            Zmień
+          </Btn>
+        </div>
+      </Card>
+      <QuickStart open={editWho} onOpenChange={setEditWho} mode="edit" />
       <Card>
         <div className="flex items-center gap-4">
           <IconTile name="pause" tone="purple" size={48} />

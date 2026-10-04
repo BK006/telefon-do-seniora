@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Avatar } from "./AppShell";
+import { CallDialog } from "./CallDialog";
 import { analyzeCall, listCalls, placeCall, type Analysis, type LiveCall } from "./api";
 import { Icon, TONE, type IconName, type Tone } from "./icons";
 import { Mascot, type Mood } from "./Mascot";
@@ -164,7 +165,8 @@ function MiniChart({ label, icon, tone, data }: { label: string; icon: IconName;
 }
 
 export function Today() {
-  const { cfg, dash, setDash, needs, toggleNeed, pause, setPause } = useCare();
+  const { cfg, setCfg, dash, setDash, needs, toggleNeed, pause, setPause } = useCare();
+  const [askCall, setAskCall] = useState(false);
   const nav = useNavigate();
   const [skipped, setSkipped] = useState(false);
   const [calling, setCalling] = useState<"idle" | "dialing" | "done">("idle");
@@ -172,11 +174,18 @@ export function Today() {
   const who = cfg.relacja || "Mama";
   const today = new Intl.DateTimeFormat("pl-PL", { weekday: "long", day: "numeric", month: "long" }).format(new Date());
 
-  async function callNow() {
+  // "Zadzwoń teraz" always asks to confirm the number first (pre-filled from settings).
+  function callNow() {
+    setAskCall(true);
+  }
+
+  async function dial(tel: string) {
+    setAskCall(false);
+    if (tel !== cfg.tel) setCfg({ tel });
     setCalling("dialing");
-    const r = await placeCall(cfg);
+    const r = await placeCall({ ...cfg, tel });
     if (r.ok) {
-      toast.success(`Asystent dzwoni do: ${cfg.forma}`, { description: `Numer +48 ${cfg.tel}. Rozmowa pojawi się w zakładce Rozmowy.` });
+      toast.success(`Asystent dzwoni do: ${cfg.forma}`, { description: `Numer +48 ${tel}. Rozmowa pojawi się w zakładce Rozmowy.` });
       setCalling("done");
     } else {
       toast.message("Połączenie testowe", { description: r.message });
@@ -213,6 +222,7 @@ export function Today() {
     return (
       <div className="space-y-6" aria-busy="true">
         {header}
+        <CallDialog open={askCall} onOpenChange={setAskCall} onConfirm={dial} />
         <div className="flex items-center gap-4">
           <Mascot size={56} mood="zamyslenie" decorative />
           <p className="font-extrabold text-[var(--plum-600)]">Wczytuję ostatnie rozmowy…</p>
@@ -230,6 +240,7 @@ export function Today() {
     return (
       <div className="space-y-6">
         {header}
+        <CallDialog open={askCall} onOpenChange={setAskCall} onConfirm={dial} />
         {live.loading ? (
           <div className="skeleton h-40" aria-busy="true" />
         ) : live.call ? (
@@ -278,6 +289,7 @@ export function Today() {
   return (
     <div className="space-y-5">
       {header}
+      <CallDialog open={askCall} onOpenChange={setAskCall} onConfirm={dial} />
 
       {pause.on && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] bg-[var(--violet-600)] px-5 py-4 text-white">

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { supabase, useAuth } from "./auth";
 import { cn } from "@/lib/utils";
@@ -56,6 +57,8 @@ function SignOutButton({ compact }: { compact?: boolean }) {
 
 export function CareShell() {
   const { cfg } = useCare();
+  // Fresh quick onboarding every time the app is entered (the shell mounts once per entry).
+  const [quickStart, setQuickStart] = useState(true);
   const navCls = ({ isActive }: { isActive: boolean }) =>
     cn(
       "flex items-center gap-3 rounded-2xl border-2 px-4 text-[17px] font-extrabold transition-colors duration-150",
@@ -105,7 +108,7 @@ export function CareShell() {
       <main className="mx-auto w-full max-w-[1000px] px-4 pt-5 pb-28 md:px-10 md:pt-9 md:pb-12">
         <Outlet />
       </main>
-      <QuickStart />
+      <QuickStart open={quickStart} onOpenChange={setQuickStart} mode="fresh" />
 
       {/* Mobile bottom tab bar */}
       <nav aria-label="Nawigacja" className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 gap-1 border-t-2 border-[var(--line)] bg-white/95 px-2 pt-2 pb-[max(8px,env(safe-area-inset-bottom))] backdrop-blur-xl md:hidden">

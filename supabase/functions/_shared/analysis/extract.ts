@@ -69,6 +69,7 @@ Rules:
 - red_flags: only if the senior mentions a fall, being unable to get up, chest pain, confusion/disorientation, or having no food/water ("other" for comparably urgent safety issues).
 - withheld_categories: topics the senior explicitly asked NOT to pass on to the family.
 - needs: concrete things the senior asked for or said they lack.
+- Colloquial Polish: "no", "noo", "no tak", "no pewnie" mean YES / agreement, not "no". Only "nie" (and its variants) means no.
 - summary_pl: neutral, factual, Polish, no medical advice or diagnosis.`;
 
 interface Raw {

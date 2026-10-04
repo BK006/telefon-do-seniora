@@ -5,6 +5,10 @@ import { Icon } from "./icons";
 import { Mascot } from "./Mascot";
 import { Btn, Field, TextInput } from "./ui";
 
+// Demo account for the HackYeah jury, shown on purpose. Calls are limited to +48 numbers
+// and 20 per hour server-side (place-call), so exposing it is acceptable for the demo.
+const JURY = { email: "jury@telefondoseniora.pl", password: "Jury-DPojpr9TMEgA" };
+
 export function SignIn() {
   const { session, signIn } = useAuth();
   const nav = useNavigate();
@@ -62,9 +66,27 @@ export function SignIn() {
           </form>
         </div>
 
-        <p className="mt-5 text-center text-[15px] font-bold text-[var(--plum-600)]">
-          Wersja demonstracyjna na HackYeah 2026. Dane logowania dla jury są w zgłoszeniu.
-        </p>
+        <div className="mt-5 rounded-[24px] border-2 border-dashed border-[var(--violet-300)] bg-white p-5">
+          <p className="text-[13px] font-extrabold tracking-wide text-[var(--violet-text)] uppercase">Dla jury HackYeah 2026</p>
+          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-[16px]">
+            <dt className="font-bold text-[var(--plum-600)]">E-mail</dt>
+            <dd className="font-extrabold break-all select-all">{JURY.email}</dd>
+            <dt className="font-bold text-[var(--plum-600)]">Hasło</dt>
+            <dd className="font-extrabold break-all select-all tabular-nums">{JURY.password}</dd>
+          </dl>
+          <Btn
+            variant="white"
+            type="button"
+            className="mt-4 w-full"
+            onClick={() => {
+              setEmail(JURY.email);
+              setPassword(JURY.password);
+              setError(null);
+            }}
+          >
+            Wpisz dane jury
+          </Btn>
+        </div>
       </div>
     </div>
   );
